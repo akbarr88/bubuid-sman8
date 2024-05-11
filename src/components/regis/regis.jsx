@@ -32,7 +32,7 @@ function Regis() {
   }
     try {
       const { data } = await axios.post(
-        "https://calm-ruby-chicken-tam.cyclic.app/auth/register",
+        "http://localhost:3000/auth/register",
         user
       );
       setRegisAlert(true);
@@ -80,11 +80,11 @@ function Regis() {
             </div>
             <div className="form-control">
               <label className="label">
-                <span className="label-text">Asal Sekolah</span>
+                <span className="label-text">Kelas</span>
               </label>
               <input
                 type="text"
-                placeholder="Masukkan Asal Sekolah Anda"
+                placeholder="Masukkan Asal Kelas Anda"
                 required
                 className="input input-bordered"
                 value={user.sekolah}

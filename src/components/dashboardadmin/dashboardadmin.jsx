@@ -20,10 +20,7 @@ function DashboardAdmin() {
             <h2 className="text-xl font-bold mb-2">Laporan Ditolak</h2>
             <p>20</p>
           </div>  
-          <div className="bg-yellow-500 text-white p-4 rounded-md">
-            <h2 className="text-xl font-bold mb-2">Laporan Selesai</h2>
-            <p>60</p>
-          </div>
+          
         </div>
       </div>
       <div className="bg-[#54BAB9] shadow-md p-4 mt-4 py-2">
@@ -44,7 +41,7 @@ function DashboardAdmin() {
             <tr key="1">
               <td className="border border-gray-200 px-4 py-2 text-white text-center">1</td>
               <td className="border border-gray-200 px-4 py-2 text-white text-center">Agus</td>
-              <td className="border border-gray-200 px-4 py-2 text-white text-center">2022-01-01</td>
+              <td className="border border-gray-200 px-4 py-2 text-white text-center">2024-01-01</td>
               <td className="border border-gray-200 px-4 py-2 text-white text-center">Lorem ipsum dolor sit amet.</td>
               <td className="border border-gray-200 px-4 py-2 text-white text-center">img</td>
               <td className="border border-gray-200 px-4 py-2 text-white text-center">Diterima</td>
@@ -52,7 +49,7 @@ function DashboardAdmin() {
             <tr key="2">
               <td className="border border-gray-200 px-4 py-2 text-white text-center">2</td>
               <td className="border border-gray-200 px-4 py-2 text-white text-center">Rio</td>
-              <td className="border border-gray-200 px-4 py-2 text-white text-center">2022-01-02</td>
+              <td className="border border-gray-200 px-4 py-2 text-white text-center">2024-01-02</td>
               <td className="border border-gray-200 px-4 py-2 text-white text-center">Consectetur adipiscing elit.</td>
               <td className="border border-gray-200 px-4 py-2 text-white text-center">img</td>
               <td className="border border-gray-200 px-4 py-2 text-white text-center">Ditolak</td>
@@ -60,7 +57,7 @@ function DashboardAdmin() {
             <tr key="3">
               <td className="border border-gray-200 px-4 py-2 text-white text-center">3</td>
               <td className="border border-gray-200 px-4 py-2 text-white text-center">Riska</td>
-              <td className="border border-gray-200 px-4 py-2 text-white text-center">2022-01-03</td>
+              <td className="border border-gray-200 px-4 py-2 text-white text-center">2024-01-03</td>
               <td className="border border-gray-200 px-4 py-2 text-white text-center">Sed do eiusmod tempor incididunt.</td>
               <td className="border border-gray-200 px-4 py-2 text-white text-center">img</td>
               <td className="border border-gray-200 px-4 py-2 text-white text-center">Diterima</td>

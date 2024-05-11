@@ -24,7 +24,7 @@ function Login() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "https://calm-ruby-chicken-tam.cyclic.app/auth/login",
+        "http://localhost:3000/auth/login",
         user
       );
       const data = response.data;

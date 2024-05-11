@@ -56,25 +56,25 @@ function Navbar() {
           }`}
         >
           <ul className="lg:flex gap-16 p-2 tracking-wider">
+            {/* <li className="hover:bg-white px-2 py-1 hover:text-black hover:rounded-xl text-xs">
+              {isLogin ? (
+                <Link to="/dashboardadmin">BERANDA</Link>
+              ) : (
+                <Link to="/dashboardadmin">BERANDA</Link>
+              )}
+            </li> */}
             <li className="hover:bg-white px-2 py-1 hover:text-black hover:rounded-xl text-xs">
               {isLogin ? (
-                <Link to="/aboutbullying">BERANDA</Link>
+                <Link to="/datalaporan">DATA LAPORAN</Link>
               ) : (
-                <Link to="/login">BERANDA</Link>
+                <Link to="/datalaporan">DATA LAPORAN</Link>
               )}
             </li>
             <li className="hover:bg-white px-2 py-1 hover:text-black hover:rounded-xl text-xs">
               {isLogin ? (
-                <Link to="/konseling">DATA LAPORAN</Link>
+                <Link to="/datapengguna">DATA PENGGUNA</Link>
               ) : (
-                <Link to="/login">DATA LAPORAN</Link>
-              )}
-            </li>
-            <li className="hover:bg-white px-2 py-1 hover:text-black hover:rounded-xl text-xs">
-              {isLogin ? (
-                <Link to="/artikel">DATA PENGGUNA</Link>
-              ) : (
-                <Link to="/login">DATA PENGGUNA</Link>
+                <Link to="/datapengguna">DATA PENGGUNA</Link>
               )}
             </li>
             {/* <li className="hover:bg-white px-2 py-1 hover:text-black hover:rounded-xl text-xs">
@@ -83,8 +83,8 @@ function Navbar() {
             <li className="hover:bg-white px-2 py-1 hover:text-black hover:rounded-xl text-xs">
               <Link to="/aboutus">ABOUT US</Link>
             </li> */}
-            <div className="inline-flex lg:flex gap-3 mt-2 text-black lg:ml-10 lg:mt-0 text-sm w-fit">
-              <Link to="/login">
+            <div className="inline-flex lg:flex gap-3 mt-2 text-black lg:ml-60 lg:mt-0 text-sm w-fit">
+              {/* <Link to="/login">
                 <button
                   className={`${
                     isLogin ? "hidden" : "bg-white px-2 rounded-lg"
@@ -102,7 +102,7 @@ function Navbar() {
                 >
                   Daftar
                 </button>
-              </Link>
+              </Link> */}
               <div
                 className={`${isLogin ? "flex gap-2 text-white" : "hidden"}`}
               >

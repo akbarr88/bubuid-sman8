@@ -16,7 +16,7 @@ function Navbar() {
 
   const getDataUser = async () => {
     try {
-      const { data } = await axios.get(`https://calm-ruby-chicken-tam.cyclic.app/users/${id}`, {
+      const { data } = await axios.get(`http://localhost:3000/users/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -44,7 +44,7 @@ function Navbar() {
   };
   return (
     <>
-      <div className="p-4 flex bg-[#54BAB9] justify-between lg:justify-around text-white items-center font-poppins">
+      <div className="p-4 flex bg-[#54BAB9] justify-between lg:justify-around text-white items-center font-poppins ">
         <div>
           <img src={navbarLogo} alt="bubu.id" width={150} />
         </div>
@@ -55,25 +55,25 @@ function Navbar() {
               : "hidden lg:flex"
           }`}
         >
-          <ul className="lg:flex gap-16 p-2 tracking-wider">
-            <li className="hover:bg-white px-2 py-1 hover:text-black hover:rounded-xl text-xs">
+          <ul className="lg:flex gap-16 p-2 tracking-wider mr-10">
+            <li className="hover:bg-white px-2 py-2 hover:text-black hover:rounded-xl text-xs mr-8">
               <Link to="/">HOME</Link>
             </li>
-            <li className="hover:bg-white px-2 py-1 hover:text-black hover:rounded-xl text-xs">
+            <li className="hover:bg-white px-2 py-2 hover:text-black hover:rounded-xl text-xs mr-8">
               {isLogin ? (
                 <Link to="/aboutbullying">ABOUT BULLYING</Link>
               ) : (
                 <Link to="/login">ABOUT BULLYING</Link>
               )}
             </li>
-            <li className="hover:bg-white px-2 py-1 hover:text-black hover:rounded-xl text-xs">
+            <li className="hover:bg-white px-2 py-2 hover:text-black hover:rounded-xl text-xs mr-8">
               {isLogin ? (
                 <Link to="/lapor">LAPOR</Link>
               ) : (
                 <Link to="/login">LAPOR</Link>
               )}
             </li>
-            <li className="hover:bg-white px-2 py-1 hover:text-black hover:rounded-xl text-xs">
+            <li className="hover:bg-white px-2 py-2 hover:text-black hover:rounded-xl text-xs mr-8">
               {isLogin ? (
                 <Link to="/artikel">ARTIKEL</Link>
               ) : (
@@ -107,7 +107,7 @@ function Navbar() {
                 </button>
               </Link>
               <div
-                className={`${isLogin ? "flex gap-2 text-white" : "hidden"}`}
+                className={`${isLogin ? "flex gap-2 text-white hover:bg-white px-2 py-1 hover:text-black hover:rounded-xl text-xs" : "hidden"}`}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -116,6 +116,7 @@ function Navbar() {
                   strokeWidth={1.5}
                   stroke="currentColor"
                   className="w-6 h-6"
+                  onClick={handleLogout}
                 >
                   <path
                     strokeLinecap="round"

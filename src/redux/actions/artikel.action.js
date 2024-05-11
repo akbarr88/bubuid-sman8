@@ -5,7 +5,7 @@ export function getArtikels(token) {
     dispatch(startFeathing());
 
     try {
-      const {data} = await axios.get("https://calm-ruby-chicken-tam.cyclic.app/artikel", {
+      const {data} = await axios.get("http://localhost:3000/artikel", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -42,7 +42,7 @@ export function getArtikelById(token, id) {
     dispatch(startFeathing());
 
     try {
-      const {data} = await axios.get(`https://calm-ruby-chicken-tam.cyclic.app/artikel/${id}`, {
+      const {data} = await axios.get(`http://localhost:3000/artikel/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

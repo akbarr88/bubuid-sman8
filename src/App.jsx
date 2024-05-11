@@ -13,6 +13,8 @@ import Lapor from "./components/lapor/lapor";
 import DashboardAdmin from "./components/dashboardadmin/dashboardadmin";
 import DataLaporan from "./components/datalaporan/datalaporan";
 import ReportDetails from "./components/detaillaporan/detaillaporan";
+import { ContactUs } from "./components/sendemail/send";
+import DataPengguna from "./components/datauser/datauser";
 
 function App() {
   return (
@@ -21,7 +23,7 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Regis />} />
-        {/* <Route element={<PrivateRoute />}> */}
+        <Route element={<PrivateRoute />}>
           <Route path="aboutbullying" element={<AboutBullying />} />
           <Route path="konseling" element={<Konseling />} />
           <Route path="konseling/:id" element={<DetailPsikolog />} />
@@ -30,8 +32,10 @@ function App() {
           <Route path="lapor" element={<Lapor/>}/>
           <Route path="dashboardadmin" element={<DashboardAdmin/>}/>
           <Route path="datalaporan" element={<DataLaporan/>}/>
+          <Route path="datapengguna" element={<DataPengguna/>}/>
           <Route path="detaillaporan" element={<ReportDetails/>}/>
-        {/* </Route> */}
+          <Route path="sendemail" element={<ContactUs/>}/>
+        </Route>
       </Routes>
     </>
   );

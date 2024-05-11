@@ -1,7 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import NavbarAdmin from "../navbar/navbaradmin";
+import { getLapors } from "../../redux/actions/datalaporan.action"; // Sesuaikan dengan path ke file actions Anda
 
-function DashboardAdmin() {
+function DataLaporan() {
+  const dispatch = useDispatch();
+  const { isLoading, lapors } = useSelector((state) => state.lapor);
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    dispatch(getLapors(token));
+  }, [dispatch, token]);
+
   return (
     <div className="min-h-screen bg-[#329694]">
       <NavbarAdmin />
@@ -20,32 +30,21 @@ function DashboardAdmin() {
             </tr>
           </thead>
           <tbody>
-            <tr key="1">
-              <td className="border border-gray-200 px-4 py-2 text-white text-center">1</td>
-              <td className="border border-gray-200 px-4 py-2 text-white text-center">Agus</td>
-              <td className="border border-gray-200 px-4 py-2 text-white text-center">2022-01-01</td>
-              <td className="border border-gray-200 px-4 py-2 text-white text-center">Lorem ipsum dolor sit amet.</td>
-              <td className="border border-gray-200 px-4 py-2 text-white text-center">Diterima</td>
-            </tr>
-            <tr key="2">
-              <td className="border border-gray-200 px-4 py-2 text-white text-center">2</td>
-              <td className="border border-gray-200 px-4 py-2 text-white text-center">Rio</td>
-              <td className="border border-gray-200 px-4 py-2 text-white text-center">2022-01-02</td>
-              <td className="border border-gray-200 px-4 py-2 text-white text-center">Consectetur adipiscing elit.</td>
-              <td className="border border-gray-200 px-4 py-2 text-white text-center">Ditolak</td>
-            </tr>
-            <tr key="3">
-              <td className="border border-gray-200 px-4 py-2 text-white text-center">3</td>
-              <td className="border border-gray-200 px-4 py-2 text-white text-center">Riska</td>
-              <td className="border border-gray-200 px-4 py-2 text-white text-center">2022-01-03</td>
-              <td className="border border-gray-200 px-4 py-2 text-white text-center">Sed do eiusmod tempor incididunt.</td>
-              <td className="border border-gray-200 px-4 py-2 text-white text-center">Diterima</td>
-            </tr>
+            {lapors.map((lapor, index) => ( // Mengubah laporan menjadi lapors
+              <tr key={index}>
+                <td className="border border-gray-200 px-4 py-2 text-white text-center">{index + 1}</td>
+                <td className="border border-gray-200 px-4 py-2 text-white text-center">{lapor.dari}</td>
+                <td className="border border-gray-200 px-4 py-2 text-white text-center">{lapor.tanggal}</td>
+                <td className="border border-gray-200 px-4 py-2 text-white text-center">{lapor.keterangan}</td>
+                <td className="border border-gray-200 px-4 py-2 text-white text-center">{lapor.status}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
+        {isLoading && <p>Loading...</p>} {/* Mengubah loading menjadi isLoading */}
       </div>
     </div>
   );
 }
 
-export default DashboardAdmin;
+export default DataLaporan;

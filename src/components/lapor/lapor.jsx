@@ -1,29 +1,55 @@
 import React, { useState } from "react";
 import Navbar from "../navbar/navbar";
 import Footer from "../footer/footer";
+import { submitLaporan } from "../../redux/actions/laporan.action";
+import { useDispatch } from "react-redux";
 
 function Lapor() {
-  const [dateValue, setDateValue] = useState('');
-  const [inputValue, setInputValue] = useState('');
-  const [file, setFile] = useState(null);
+  const dispatch = useDispatch();
+  const token = localStorage.getItem("token");
 
-  const handleDateChange = (event) => {
-    setDateValue(event.target.value);
+  // State untuk menyimpan nilai input
+  const [formData, setFormData] = useState({
+    tanggal: "",
+    keterangan: "",
+    // img: null, // Mengubah menjadi null karena akan menyimpan file
+  });
+
+  // Handler untuk mengubah nilai input
+  const handleChange = (e) => {
+    // Jika input adalah file, gunakan e.target.files[0] untuk mengakses file
+    const value = e.target.name === "img" ? e.target.files[0] : e.target.value;
+
+    setFormData({
+      ...formData,
+      [e.target.name]: value,
+    });
   };
 
-  const handleInputChange = (event) => {
-    setInputValue(event.target.value);
-  };
-
-  const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log("Nilai dari text box:", inputValue);
-    console.log("Tanggal laporan:", dateValue);
+  // Handler untuk mengirim data
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Validasi input
+    if (!formData.tanggal || !formData.keterangan) {
+      alert("Please fill all fields before submitting.");
+      return;
+    }
     
+    // Buat FormData untuk mengirim data file
+    // const formDataToSend = new FormData();
+    // formDataToSend.append("tanggal", formData.tanggal);
+    // formDataToSend.append("keterangan", formData.keterangan);
+    // formDataToSend.append("img", formData.img); // File
+    
+    // Panggil action creator untuk mengirim data
+    dispatch(submitLaporan(token, formData))
+      .then(() => {
+        alert("Data berhasil di submit!");
+      })
+      .catch((error) => {
+        alert("Terjadi kesalahan saat mengirim data.");
+        console.error("Error:", error);
+      });
   };
 
   return (
@@ -33,47 +59,48 @@ function Lapor() {
         <h1 className="font-rufina text-center text-white text-4xl">Lapor</h1>
         <div className="bg-white min-w-min mx-40 mt-8 mb-20 rounded-3xl">
           <h1 className="font-poppins text-center text-3xl py-6">Form Laporan</h1>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit}> {/* Tambahkan onSubmit */}
             <div className="py-4 mx-20 font-poppins">
-              <label htmlFor="dateValue">Tanggal laporan</label>
+              <label htmlFor="tanggal">Tanggal laporan</label>
               <input
                 type="date"
-                id="dateValue"
-                name="dateValue"
-                value={dateValue}
-                onChange={handleDateChange}
+                id="tanggal"
+                name="tanggal"
+                value={formData.tanggal}
+                onChange={handleChange}
                 required
                 className="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
             <div className="py-4 mx-20 font-poppins">
-              <label htmlFor="inputValue">Masukkan teks</label>
+              <label htmlFor="keterangan">Masukkan teks</label>
               <textarea
-                id="inputValue"
-                name="inputValue"
-                value={inputValue}
-                onChange={handleInputChange}
+                id="keterangan"
+                name="keterangan"
+                value={formData.keterangan}
+                onChange={handleChange}
                 required
                 rows="6"
                 className="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
 
-            <div className="py-4 mx-20 font-poppins">
-              <label htmlFor="file">Bukti (jika ada)</label><br></br>
+            {/* <div className="py-4 mx-20 font-poppins">
+              <label htmlFor="img">Bukti (jika ada)</label><br></br>
               <input
                 type="file"
-                id="file"
-                name="file"
-                onChange={handleFileChange}
+                id="img"
+                name="img"
+                onChange={handleChange}
                 className="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
-            </div>
+            </div> */}
 
             <div className="flex justify-center">
-            <button className="my-8 font-poppins bg-[#18978F] text-white px-20 rounded-sm " type="submit">Buat Laporan</button>
+              <button className="my-8 font-poppins bg-[#18978F] text-white px-20 rounded-sm" type="submit">
+                Buat Laporan
+              </button>
             </div>
-            
           </form>
         </div>
       </div>

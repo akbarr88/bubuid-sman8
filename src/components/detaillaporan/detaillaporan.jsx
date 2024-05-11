@@ -10,13 +10,24 @@ function ReportDetails() {
   }
 
   return (
-    <div>
-      <h2>Report Details</h2>
-      <p>No: {report.no}</p>
-      <p>From: {report.from}</p>
-      <p>Date: {report.date}</p>
-      <p>Report: {report.report}</p>
-      <p>Status: {report.status}</p>
+    <div className="bg-white p-8 rounded-lg shadow-md">
+      <h2 className="text-2xl font-semibold mb-4">Report Details</h2>
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <p className="font-semibold">No:</p>
+          <p className="font-semibold">From:</p>
+          <p className="font-semibold">Date:</p>
+          <p className="font-semibold">Report:</p>
+          <p className="font-semibold">Status:</p>
+        </div>
+        <div>
+          <p>{report.no}</p>
+          <p>{report.from}</p>
+          <p>{report.date}</p>
+          <p>{report.report}</p>
+          <p>{report.status}</p>
+        </div>
+      </div>
     </div>
   );
 }

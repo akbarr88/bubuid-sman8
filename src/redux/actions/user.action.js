@@ -5,7 +5,7 @@ export function getUserIdKonseling(token, userId) {
     dispatch(startFeathing());
 
     try {
-      const {data} = await axios.get(`https://calm-ruby-chicken-tam.cyclic.app/users/${userId}/konseling`, {
+      const {data} = await axios.get(`http://localhost:3000/users/${userId}/konseling`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

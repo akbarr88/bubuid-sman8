@@ -1,10 +1,11 @@
-import React from "react";
+import React from "react"; 
 import { Link } from "react-router-dom";
 import logoFooter from "../../assets/LogoTanganFooter.png"
 import logoFb from "../../assets/fb.png"
 import logoX from "../../assets/twt.png"
 import logoIg from "../../assets/ig.png"
 import logoSkilvul from "../../assets/skilvul.png"
+import logoSekolah from "../../assets/sman8.png"
 
 
 function Footer() {
@@ -24,7 +25,7 @@ function Footer() {
             <Link to="">
               <img src={logoX} width={24} alt="" />
             </Link>
-            <Link to="">
+            <Link to="https://www.instagram.com/sman8.batam/" target="_blank">
               <img src={logoIg} width={24} alt="" />
             </Link>
           </div>
@@ -38,7 +39,7 @@ function Footer() {
         <Link to="/aboutbullying" className="link link-hover">
           About Bullying
         </Link>
-        <Link to="/konseling" className="link link-hover">
+        <Link to="/lapor" className="link link-hover">
           Lapor
         </Link>
         <Link to="/artikel" className="link link-hover">
@@ -47,17 +48,20 @@ function Footer() {
       </nav>
       <nav>
         <header className="footer-title">Company</header>
-        <Link to="/aboutus" className="link link-hover">
+        {/* <Link to="/aboutus" className="link link-hover">
           About us
-        </Link>
+        </Link> */}
         <a className="link link-hover">Contact</a>
         <Link to="/" className="link link-hover">
           
         </Link>
       </nav>
+
       <nav>
-        <header className="footer-title">Partner</header>
-        <img src={logoSkilvul} width={100} alt="Skilvul" />
+        <header className="footer-title ">Partner</header>
+        <a href="https://www.sman8btm.sch.id/" target="_blank">
+          <img src={logoSekolah} width={90} alt="Sman8" />
+        </a>
       </nav>
     </footer>
   );
