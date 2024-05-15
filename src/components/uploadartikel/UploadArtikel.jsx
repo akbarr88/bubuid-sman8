@@ -24,7 +24,7 @@ export default function UploadArtikel() {
       setLoading(false);
       return;
     }
-
+    //new
     const data = {
       judul,
       isi,
