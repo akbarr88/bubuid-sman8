@@ -5,11 +5,14 @@ export function getPsikologs(token) {
     dispatch(startFeathing());
 
     try {
-      const {data} = await axios.get("https://calm-ruby-chicken-tam.cyclic.app/psikolog", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const { data } = await axios.get(
+        "https://calm-ruby-chicken-tam.cyclic.app/psikolog",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       dispatch(successGetPsikologs(data.data));
     } catch (error) {
       dispatch(errorFetching(error.message));
@@ -22,7 +25,7 @@ export function getPsikologById(token, id) {
     dispatch(startFeathing());
 
     try {
-      const {data} = await axios.get(`https://calm-ruby-chicken-tam.cyclic.app/psikolog/${id}`, {
+      const { data } = await axios.get(`http://localhost:3000/psikolog/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -33,7 +36,6 @@ export function getPsikologById(token, id) {
     }
   };
 }
-
 
 function startFeathing() {
   return {
