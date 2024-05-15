@@ -7,7 +7,7 @@ function DashboardAdmin() {
       <NavbarAdmin />
       <div className="bg-[#54BAB9] shadow-md p-4 text-white">
         <h1 className="text-2xl font-bold mb-4 py-2">Dashboard Admin</h1>
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-4 gap-4 ml-52 py-4">
           <div className="bg-blue-500 text-white p-4 rounded-md">
             <h2 className="text-xl font-bold mb-2">Total Laporan</h2>
             <p>100</p>

@@ -1,48 +1,118 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import NavbarAdmin from "../navbar/navbaradmin";
-import { getLapors } from "../../redux/actions/datalaporan.action"; // Sesuaikan dengan path ke file actions Anda
+import { getLapors } from "../../redux/actions/datalaporan.action";
+import axios from "axios";
 
 function DataLaporan() {
   const dispatch = useDispatch();
   const { isLoading, lapors } = useSelector((state) => state.lapor);
   const token = localStorage.getItem("token");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 15;
 
   useEffect(() => {
     dispatch(getLapors(token));
   }, [dispatch, token]);
 
+  async function handleStatus(id, status) {
+    console.log(id, status);
+    const res = await axios.patch(
+      `http://localhost:3000/lapor/${id}/${!status}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    console.log(res);
+  }
+
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
+
+  const handlePrevPage = () => {
+    setCurrentPage((prevPage) => prevPage - 1);
+  };
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = lapors.slice(indexOfFirstItem, indexOfLastItem);
+
   return (
-    <div className="min-h-screen bg-[#329694]">
+    <div className="overflow-x-auto bg-[#faffff]">
       <NavbarAdmin />
-      
-      <div className="bg-[#54BAB9] shadow-md p-4 mt-4 py-2">
-        <h2 className="text-xl font-bold mb-4 text-white py-2">Data Laporan</h2>
-        <table className="table-auto w-full">
+      <div className="mx-auto max-w-4xl">
+        <table className="table mt-8">
+          {/* head */}
           <thead>
             <tr>
-              <th className="px-4 py-2 text-white" scope="col">No</th>
-              <th className="px-4 py-2 text-white" scope="col">Dari</th>
-              <th className="px-4 py-2 text-white" scope="col">Tanggal</th>
-              <th className="px-4 py-2 text-white" scope="col">Isi Laporan</th>
-              <th className="px-4 py-2 text-white" scope="col">Status</th>
-              
+              <th className="w-20">No</th>
+              <th className="w-60">Name</th>
+              <th className="w-80">Tanggal</th>
+              <th className="w-80">Keterangan</th>
+              <th className="w-20">Status</th>
             </tr>
           </thead>
           <tbody>
-            {lapors.map((lapor, index) => ( // Mengubah laporan menjadi lapors
-              <tr key={index}>
-                <td className="border border-gray-200 px-4 py-2 text-white text-center">{index + 1}</td>
-                <td className="border border-gray-200 px-4 py-2 text-white text-center">{lapor.dari}</td>
-                <td className="border border-gray-200 px-4 py-2 text-white text-center">{lapor.tanggal}</td>
-                <td className="border border-gray-200 px-4 py-2 text-white text-center">{lapor.keterangan}</td>
-                <td className="border border-gray-200 px-4 py-2 text-white text-center">{lapor.status}</td>
+            {currentItems.map((lapor, index) => (
+              <tr
+                key={index}
+                className={index === 0 ? "" : "border-t-2 border-gray-200"} 
+              >
+                <td>{index + 1 + indexOfFirstItem}</td>
+                <td>
+                  <div className="flex items-center gap-3">
+                    <div>
+                      <div className="font-bold">{lapor?.User?.nama}</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  {lapor.tanggal ? lapor.tanggal.substring(0, 10) : "-"}
+                  <br />
+                </td>
+                <td>{lapor.keterangan}</td>
+                <td className="text-center">
+                  <button
+                    className={`px-2 py-1 text-white rounded ${
+                      lapor?.Status?.verified ? "bg-green-500" : "bg-red-500"
+                    } btn btn-ghost btn-xs`}
+                    onClick={() => handleStatus(lapor.id, lapor.Status.verified)}
+                  >
+                    {lapor?.Status?.verified ? "verified" : "unverified"}
+                  </button>
+                </td>
+                <th>
+                  <button className="btn btn-ghost btn-xs">details</button>
+                </th>
               </tr>
             ))}
           </tbody>
         </table>
-        {isLoading && <p>Loading...</p>} {/* Mengubah loading menjadi isLoading */}
       </div>
+      {lapors.length > itemsPerPage && (
+        <div className="pagination flex items-center justify-center mt-4 mb-8">
+          <button
+            className="px-3 py-1 bg-gray-200 text-gray-700 rounded-md mr-2"
+            onClick={handlePrevPage}
+            disabled={currentPage === 1}
+          >
+            {currentPage === 1 ? "Prev" : currentPage - 1}
+          </button>
+          <span className="px-3 py-1 bg-blue-400 text-gray-700 rounded-md mr-2">{currentPage}</span>
+          <button
+            className="px-3 py-1 bg-gray-200 text-gray-700 rounded-md mr-2"
+            onClick={handleNextPage}
+            disabled={indexOfLastItem >= lapors.length}
+          >
+            {currentPage + 1}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

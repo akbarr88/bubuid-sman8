@@ -55,7 +55,7 @@ function Navbar() {
               : "hidden lg:flex"
           }`}
         >
-          <ul className="lg:flex gap-16 p-2 tracking-wider mr-10">
+          <ul className="lg:flex gap-12 p-2 tracking-wider ml-8  ">
             <li className="hover:bg-white px-2 py-2 hover:text-black hover:rounded-xl text-xs mr-8">
               <Link to="/">HOME</Link>
             </li>

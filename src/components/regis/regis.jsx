@@ -70,7 +70,7 @@ function Regis() {
               </label>
               <input
                 type="text"
-                placeholder="Masukkan Nama Anda"
+                placeholder="Masukkan Nama Lengkap Anda"
                 className="input input-bordered"
                 value={user.nama}
                 onChange={handleChange}
@@ -98,7 +98,7 @@ function Regis() {
               </label>
               <input
                 type="email"
-                placeholder="Example@gmail.com"
+                placeholder="Gunakan email yang aktif"
                 className="input input-bordered"
                 value={user.email}
                 onChange={handleChange}
