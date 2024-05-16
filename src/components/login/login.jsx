@@ -1,9 +1,10 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import logoLogin from "../../assets/login.jpeg"
+import { Link, useNavigate } from "react-router-dom";
+import logoLogin from "../../assets/login.jpeg";
 
 function Login() {
+  const navigate = useNavigate();
   localStorage.removeItem("token");
   localStorage.removeItem("id_user");
   const [user, setUser] = useState({
@@ -28,6 +29,7 @@ function Login() {
         user
       );
       const data = response.data;
+      console.log(response.data);
 
       if (!data || !data.token || !data.id_user) {
         // Data tidak lengkap, tampilkan alert
@@ -37,9 +39,10 @@ function Login() {
 
       localStorage.setItem("token", data.token);
       localStorage.setItem("id_user", data.id_user);
-
-      // Pindah ke halaman lain
-      window.location.href = "/";
+      if (data.role === "admin") {
+        return navigate("/dashboardadmin");
+      }
+      navigate("/");
     } catch (error) {
       console.error("Error during login:", error);
 
@@ -121,7 +124,7 @@ function Login() {
             </div>
           </form>
           <div className="w-60">
-            <img src={logoLogin}alt="" />
+            <img src={logoLogin} alt="" />
           </div>
         </div>
       </div>
