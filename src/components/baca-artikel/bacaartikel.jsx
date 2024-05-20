@@ -42,7 +42,7 @@ function Bacaartikel() {
           <div className="grid grid-cols-1 justify-center items-center">
             <img
               src={artikelbyId.gambar}
-              width={300}
+              width={400}
               className="mx-auto mt-5 mb-5 rounded-md"
               alt=""
             />
@@ -55,7 +55,7 @@ function Bacaartikel() {
               <img src={artikelbyId.profil_penulis} width={30} alt="" />
               <div className="">
                 <p>{artikelbyId.penulis}</p>
-                <p>{artikelbyId.pekerjaan}</p>
+
               </div>
               <div className="flex gap-4">
                 <a>

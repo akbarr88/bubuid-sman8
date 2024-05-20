@@ -4,7 +4,7 @@ import axios from "axios";
 import { data } from "autoprefixer";
 import navbarLogo from "../../assets/navbar.png"
 
-function Navbar() {
+function NavbarAdmin() {
   const [isClick, setIsClick] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [user, setUser] = useState({});
@@ -44,25 +44,25 @@ function Navbar() {
   };
   return (
     <>
-      <div className="p-4 flex bg-[#329694] justify-between lg:justify-around text-white items-center font-poppins py-4">
+      <div className="p-8 flex bg-blue-400 justify-between lg:justify-around text-white items-center font-poppins py-4 ">
         <div>
-          <h1 className="text-xl font-bold font-poppins"> ADMIN </h1>
+          <h1 className="text-xl font-bold font-poppins  ml-20"> ADMIN </h1>
         </div>
         <div
           className={`${
             isClick
-              ? "absolute p-2 right-0 top-20 bg-[#54BAB9] md:w-1/3 lg:hidden rounded-md"
+              ? "absolute p-2 right-0 top-20 bg-blue-400 md:w-1/3 lg:hidden rounded-md"
               : "hidden lg:flex"
           }`}
         >
-          <ul className="lg:flex gap-16 p-2 tracking-wider">
-            {/* <li className="hover:bg-white px-2 py-1 hover:text-black hover:rounded-xl text-xs">
+          <ul className="lg:flex gap-16 p-2 trackingwider ml-40 ">
+          <li className="hover:bg-white px-2 py-1  hover:text-black hover:rounded-xl text-xs">
               {isLogin ? (
-                <Link to="/dashboardadmin">BERANDA</Link>
+                <Link to="/dashboardadmin">DASHBOARD ADMIN</Link>
               ) : (
-                <Link to="/dashboardadmin">BERANDA</Link>
+                <Link to="/dashboardadmin">DASHBOARD ADMIN</Link>
               )}
-            </li> */}
+            </li>           
             <li className="hover:bg-white px-2 py-1 hover:text-black hover:rounded-xl text-xs">
               {isLogin ? (
                 <Link to="/datalaporan">DATA LAPORAN</Link>
@@ -72,37 +72,20 @@ function Navbar() {
             </li>
             <li className="hover:bg-white px-2 py-1 hover:text-black hover:rounded-xl text-xs">
               {isLogin ? (
-                <Link to="/datapengguna">DATA PENGGUNA</Link>
+                <Link to="/datapengguna">DATA USER</Link>
               ) : (
-                <Link to="/datapengguna">DATA PENGGUNA</Link>
+                <Link to="/datapengguna">DATA USER</Link>
               )}
             </li>
-            {/* <li className="hover:bg-white px-2 py-1 hover:text-black hover:rounded-xl text-xs">
-              <Link to="/">FORUM</Link>
-            </li>
             <li className="hover:bg-white px-2 py-1 hover:text-black hover:rounded-xl text-xs">
-              <Link to="/aboutus">ABOUT US</Link>
-            </li> */}
+              {isLogin ? (
+                <Link to="/uploadartikel">UPLOAD ARTIKEL</Link>
+              ) : (
+                <Link to="/uploadartikel">UPLOAD ARTIKEL</Link>
+              )}
+            </li>
+
             <div className="inline-flex lg:flex gap-3 mt-2 text-black lg:ml-60 lg:mt-0 text-sm w-fit">
-              {/* <Link to="/login">
-                <button
-                  className={`${
-                    isLogin ? "hidden" : "bg-white px-2 rounded-lg"
-                  }`}
-                  // onClick={handleLogin}
-                >
-                  Login
-                </button>
-              </Link>
-              <Link to="/register">
-                <button
-                  className={`${
-                    isLogin ? "hidden" : "bg-white px-2 rounded-lg"
-                  }`}
-                >
-                  Daftar
-                </button>
-              </Link> */}
               <div
                 className={`${isLogin ? "flex gap-2 text-white" : "hidden"}`}
               >
@@ -155,10 +138,11 @@ function Navbar() {
               d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
             />
           </svg>
+          
         </div>
       </div>
     </>
   );
 }
 
-export default Navbar;
+export default NavbarAdmin;

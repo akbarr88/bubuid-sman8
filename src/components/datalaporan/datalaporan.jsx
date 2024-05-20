@@ -1,14 +1,18 @@
-import axios from "axios";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getLapors } from "../../redux/actions/datalaporan.action"; // Sesuaikan dengan path ke file actions Anda
+import { useNavigate } from "react-router-dom";
 import NavbarAdmin from "../navbar/navbaradmin";
+import { getLapors } from "../../redux/actions/datalaporan.action";
+import axios from "axios";
 
 function DataLaporan() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { isLoading, lapors } = useSelector((state) => state.lapor);
   const token = localStorage.getItem("token");
-  console.log(lapors);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 15;
+
   useEffect(() => {
     dispatch(getLapors(token));
   }, [dispatch, token]);
@@ -28,76 +32,90 @@ function DataLaporan() {
     console.log(res);
   }
 
-  return (
-    <div className="min-h-screen bg-[#329694]">
-      <NavbarAdmin />
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
 
-      <div className="bg-[#54BAB9] shadow-md p-4 mt-4 py-2">
-        <h2 className="text-xl font-bold mb-4 text-white py-2">Data Laporan</h2>
-        <table className="table-auto w-full">
+  const handlePrevPage = () => {
+    setCurrentPage((prevPage) => prevPage - 1);
+  };
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = lapors.slice(indexOfFirstItem, indexOfLastItem);
+
+  return (
+    <div className="overflow-x-auto bg-[#faffff]">
+      <NavbarAdmin />
+      <div className="mx-auto max-w-4xl">
+        <table className="table mt-8 w-full">
           <thead>
             <tr>
-              <th className="px-4 py-2 text-white" scope="col">
-                No
-              </th>
-              <th className="px-4 py-2 text-white" scope="col">
-                Dari
-              </th>
-              <th className="px-4 py-2 text-white" scope="col">
-                Tanggal
-              </th>
-              <th className="px-4 py-2 text-white" scope="col">
-                Isi Laporan
-              </th>
-              <th className="px-4 py-2 text-white" scope="col">
-                Status
-              </th>
+              <th className="w-20 text-left px-4 py-2">No</th>
+              <th className="w-60 text-left px-4 py-2">Name</th>
+              <th className="w-80 text-left px-4 py-2">Tanggal</th>
+              <th className="w-80 text-left px-4 py-2">Keterangan</th>
+              <th className="w-20 text-center px-4 py-2">Status</th>
+              <th className="w-20 text-center px-4 py-2">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {lapors.map(
-              (
-                lapor,
-                index // Mengubah laporan menjadi lapors
-              ) => (
-                <tr key={index}>
-                  <td className="border border-gray-200 px-4 py-2 text-white text-center">
-                    {index + 1}
-                  </td>
-                  <td className="border border-gray-200 px-4 py-2 text-white text-center">
-                    {lapor?.User?.nama}
-                  </td>
-                  <td className="border border-gray-200 px-4 py-2 text-white text-center">
-                    {lapor.createdAt
-                      .split("T")[0]
-                      .split("-")
-                      .reverse()
-                      .join("-")}
-                  </td>
-                  <td className="border border-gray-200 px-4 py-2 text-white text-center">
-                    {lapor.keterangan}
-                  </td>
-                  <td
-                    className={` ${
+            {currentItems.map((lapor, index) => (
+              <tr key={index}>
+                <td className="px-4 py-2">{index + 1 + indexOfFirstItem}</td>
+                <td className="px-4 py-2">
+                  <div className="flex items-center gap-3">
+                    <div className="font-bold">{lapor?.User?.nama}</div>
+                  </div>
+                </td>
+                <td className="px-4 py-2">
+                  {lapor.tanggal ? lapor.tanggal.substring(0, 10) : "-"}
+                </td>
+                <td className="px-4 py-2">{lapor.keterangan}</td>
+                <td className="px-4 py-2 text-center">
+                  <button
+                    className={`px-2 py-1 text-white rounded ${
                       lapor?.Status?.verified ? "bg-green-500" : "bg-red-500"
-                    } border border-gray-200 px-4 py-2 text-white text-center`}
+                    } btn btn-ghost btn-xs`}
+                    onClick={() => handleStatus(lapor.id, lapor.Status.verified)}
                   >
-                    <button
-                      onClick={() =>
-                        handleStatus(lapor.id, lapor.Status.verified)
-                      }
-                    >
-                      {lapor?.Status?.verified ? "verifeid" : "unverified"}
-                    </button>
-                  </td>
-                </tr>
-              )
-            )}
+                    {lapor?.Status?.verified ? "verified" : "unverified"}
+                  </button>
+                </td>
+                <td className="px-4 py-2 text-center">
+                  <button
+                    className="btn btn-ghost btn-xs"
+                    onClick={() => navigate(`/sendemail/${lapor.id}`)}
+                  >
+                    reply
+                  </button>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
-        {isLoading && <p>Loading...</p>}{" "}
-        {/* Mengubah loading menjadi isLoading */}
       </div>
+      {lapors.length > itemsPerPage && (
+        <div className="pagination flex items-center justify-center mt-4 mb-8">
+          <button
+            className="px-3 py-1 bg-gray-200 text-gray-700 rounded-md mr-2"
+            onClick={handlePrevPage}
+            disabled={currentPage === 1}
+          >
+            Prev
+          </button>
+          <span className="px-3 py-1 bg-blue-400 text-gray-700 rounded-md mr-2">
+            {currentPage}
+          </span>
+          <button
+            className="px-3 py-1 bg-gray-200 text-gray-700 rounded-md mr-2"
+            onClick={handleNextPage}
+            disabled={indexOfLastItem >= lapors.length}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 }

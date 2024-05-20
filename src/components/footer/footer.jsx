@@ -4,8 +4,9 @@ import logoFooter from "../../assets/LogoTanganFooter.png"
 import logoFb from "../../assets/fb.png"
 import logoX from "../../assets/twt.png"
 import logoIg from "../../assets/ig.png"
-import logoSkilvul from "../../assets/skilvul.png"
 import logoSekolah from "../../assets/sman8.png"
+import logoemail from "../../assets/logoemail.png"
+import logophone from "../../assets/phone.png"
 
 
 function Footer() {
@@ -47,14 +48,16 @@ function Footer() {
         </Link>
       </nav>
       <nav>
-        <header className="footer-title">Company</header>
-        {/* <Link to="/aboutus" className="link link-hover">
-          About us
-        </Link> */}
-        <a className="link link-hover">Contact</a>
-        <Link to="/" className="link link-hover">
-          
-        </Link>
+        <header className="footer-title">Contact</header>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <img src={logophone} width={24} alt="" />
+          <a className="link link-hover ml-3">+62 778 4886205</a>
+        </div>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <img src={logoemail} width={24} alt="" />
+          <a className="link link-hover ml-3">info@sman8btm.sch.id</a>
+        </div>
+        <Link to="/" className="link link-hover"></Link>
       </nav>
 
       <nav>
