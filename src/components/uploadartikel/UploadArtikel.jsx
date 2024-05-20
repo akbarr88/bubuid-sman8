@@ -44,6 +44,26 @@ export default function UploadArtikel() {
   async function handleUpload(e) {
     dispatch({ type: "SET_LOADING", payload: true });
     e.preventDefault();
+    if (!image) {
+      const data = {
+        judul,
+        isi,
+        penulis,
+        headline_isi: headline,
+      };
+
+      const response = await axios.post("http://localhost:3000/artikel", data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        signal,
+      });
+
+      alert("Artikel Created");
+      dispatch({ type: "SET_LOADING", payload: false });
+      return response;
+    }
     const formData = new FormData();
     formData.append("file", image);
     const res = await axios.post(

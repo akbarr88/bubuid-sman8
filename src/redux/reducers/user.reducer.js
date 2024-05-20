@@ -1,5 +1,6 @@
 const initialValue = {
   users: [],
+  role: "",
   err: "",
 };
 
@@ -13,6 +14,11 @@ function userReducer(state = initialValue, action) {
       return {
         ...state,
         users: action.payload,
+      };
+    case "GET_ROLE":
+      return {
+        ...state,
+        role: action.payload,
       };
     default:
       return state;

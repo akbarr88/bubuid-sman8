@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import AboutBullying from "./components/aboutbullying/aboutbullying";
@@ -13,11 +15,20 @@ import LandingPage from "./components/landingpage/landingpage";
 import Lapor from "./components/lapor/lapor";
 import Login from "./components/login/login";
 import Regis from "./components/regis/regis";
+import AdminRoute from "./components/routing/adminRoute";
 import PrivateRoute from "./components/routing/privateRoute";
 import { ContactUs } from "./components/sendemail/send";
 import UploadArtikel from "./components/uploadartikel/UploadArtikel";
+import { getUsersById } from "./redux/actions/datauser.action";
 
 function App() {
+  const dispatch = useDispatch();
+  const id = localStorage.getItem("id_user");
+  const token = localStorage.getItem("token");
+  useEffect(() => {
+    dispatch(getUsersById(token, id));
+  }, [id]);
+
   return (
     <>
       <Routes>
@@ -31,7 +42,9 @@ function App() {
           <Route path="artikel" element={<Artikel />} />
           <Route path="artikel/:id" element={<BacaArtikel />} />
           <Route path="lapor" element={<Lapor />} />
-          <Route path="dashboardadmin" element={<DashboardAdmin />} />
+          <Route path="dashboardadmin" element={<AdminRoute />}>
+            <Route index element={<DashboardAdmin />} />
+          </Route>
           <Route path="uploadartikel" element={<UploadArtikel />} />
           <Route path="datalaporan" element={<DataLaporan />} />
           <Route path="datapengguna" element={<DataPengguna />} />
