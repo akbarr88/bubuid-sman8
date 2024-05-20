@@ -73,16 +73,13 @@ function DataLaporan() {
                 </td>
                 <td className="px-4 py-2">{lapor.keterangan}</td>
                 <td className="px-4 py-2 text-center">
-                  <button
+                  <h3
                     className={`px-2 py-1 text-white rounded ${
                       lapor?.Status?.verified ? "bg-green-500" : "bg-red-500"
-                    } btn btn-ghost btn-xs`}
-                    onClick={() =>
-                      handleStatus(lapor.id, lapor.Status.verified)
-                    }
+                    } `}
                   >
                     {lapor?.Status?.verified ? "verified" : "unverified"}
-                  </button>
+                  </h3>
                 </td>
                 <td className="px-4 py-2 text-center">
                   <button

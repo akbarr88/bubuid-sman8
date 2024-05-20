@@ -1,13 +1,13 @@
 import emailjs from "@emailjs/browser";
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import NavbarAdmin from "../navbar/navbaradmin";
 
 export const ContactUs = () => {
+  const navigate = useNavigate();
   const [user, setUser] = useState({});
   const { id } = useParams();
-  console.log(id);
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -22,12 +22,28 @@ export const ContactUs = () => {
     getDatafromLapor();
   }, [id]);
 
-  console.log(user);
-
   const form = useRef();
 
-  const sendEmail = (e) => {
+  const sendEmail = async (e) => {
     e.preventDefault();
+    try {
+      const res = await axios.patch(
+        `http://localhost:3000/lapor/${id}/true`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!res) {
+        alert("error something wrong");
+        return;
+      }
+      navigate("/datalaporan");
+    } catch (error) {
+      alert("error something");
+    }
 
     emailjs
       .sendForm(
@@ -45,6 +61,7 @@ export const ContactUs = () => {
           console.log("FAILED...", error.text);
         }
       );
+
     alert("Email terkirim");
   };
 
