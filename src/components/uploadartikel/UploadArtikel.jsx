@@ -1,122 +1,199 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useReducer } from "react";
+import { removeFileExtensionFromUrl } from "../../redux/utils/parseImgName";
+import NavbarAdmin from "../navbar/navbaradmin";
+
+const initialState = {
+  image: null,
+  judul: "",
+  isi: "",
+  loading: false,
+  penulis: "",
+  headline: "",
+  errorMessage: "",
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "SET_IMAGE":
+      return { ...state, image: action.payload };
+    case "SET_JUDUL":
+      return { ...state, judul: action.payload };
+    case "SET_ISI":
+      return { ...state, isi: action.payload };
+    case "SET_LOADING":
+      return { ...state, loading: action.payload };
+    case "SET_PENULIS":
+      return { ...state, penulis: action.payload };
+    case "SET_HEADLINE":
+      return { ...state, headline: action.payload };
+    case "SET_ERROR_MESSAGE":
+      return { ...state, errorMessage: action.payload };
+    default:
+      return state;
+  }
+};
 
 export default function UploadArtikel() {
-  const [image, setImage] = useState(null);
-  const [judul, setJudul] = useState("");
-  const [isi, setIsi] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [penulis, setPenulis] = useState("");
-  const [headline, setHeadline] = useState("");
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const { image, judul, isi, loading, penulis, headline, errorMessage } = state;
   const token = localStorage.getItem("token");
+
+  const controller = new AbortController();
+  const signal = controller.signal;
+
   async function handleUpload(e) {
-    setLoading(true);
+    dispatch({ type: "SET_LOADING", payload: true });
     e.preventDefault();
     const formData = new FormData();
     formData.append("file", image);
-    const res = await axios.post("http://localhost:3000/upload", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-
+    const res = await axios.post(
+      "http://localhost:3000/image/upload",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        signal,
+      }
+    );
+    const imageUrl = res.data.imageUrl;
+    const imageName = removeFileExtensionFromUrl(imageUrl);
     if (!res.data.imageUrl) {
-      setLoading(false);
+      dispatch({ type: "SET_LOADING", payload: false });
       return;
     }
+    try {
+      const data = {
+        judul,
+        isi,
+        penulis,
+        headline_isi: headline,
+        gambar: imageUrl,
+      };
 
-    const data = {
-      judul,
-      isi,
-      penulis,
-      headline,
-      gambar: res.data.imageUrl,
-    };
+      const response = await axios.post("http://localhost:3000/artikel", data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        signal,
+      });
 
-    const response = await axios.post("http://localhost:3000/artikel", data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
-
-    setLoading(false);
-    alert("Artikel Created");
-    return response;
+      alert("Artikel Created");
+      return response;
+    } catch (error) {
+      if (error.response && error.response.status === 403) {
+        dispatch({
+          type: "SET_ERROR_MESSAGE",
+          payload: error.response.data.message,
+        });
+      }
+      await axios.delete(`http://localhost:3000/image/delete/${imageName}`);
+    } finally {
+      dispatch({ type: "SET_LOADING", payload: false });
+    }
   }
 
   return (
-    <div className="flex flex-col gap-4 items-center justify-center h-screen">
-      <h2 className="text-3xl text-white">Upload Article</h2>
-      <div>
-        <form onSubmit={handleUpload} action="">
-          <label className="block" htmlFor="fileImage">
-            Image
-          </label>
-          <input
-            id="fileImage"
-            name="fileImage"
-            type="file"
-            disabled={loading}
-            onChange={(e) => setImage(e.target.files[0])}
-            className="file-input file-input-bordered file-input-primary w-full max-w-xs"
-          />
+    <div className="min-h-screen flex flex-col">
+      <NavbarAdmin />
+      <div className="flex-grow flex flex-col items-center justify-center overflow-x-auto mt-2">
+        <p className="text-red-600 font-semibold text-sm">{errorMessage}</p>
+        <div className="w-full max-w-4xl bg-white p-8 rounded-lg shadow-md">
+          <form onSubmit={handleUpload} className="space-y-4">
+            <div>
+              <label className="block text-lg font-medium" htmlFor="fileImage">
+                Image
+              </label>
+              <input
+                id="fileImage"
+                name="fileImage"
+                type="file"
+                disabled={loading}
+                onChange={(e) =>
+                  dispatch({ type: "SET_IMAGE", payload: e.target.files[0] })
+                }
+                className="file-input file-input-bordered file-input-primary w-full h-8"
+              />
+            </div>
 
-          <label className="block mt-4" htmlFor="headline">
-            headline article
-          </label>
-          <input
-            id="headline"
-            name="headline"
-            type="text"
-            value={headline}
-            disabled={loading}
-            placeholder="Type here"
-            className="input input-bordered input-primary w-full max-w-xs"
-            onChange={(e) => setHeadline(e.target.value)}
-          />
-          <label className="block mt-4" htmlFor="judul">
-            judul
-          </label>
-          <input
-            id="judul"
-            name="judul"
-            type="text"
-            value={judul}
-            disabled={loading}
-            placeholder="Type here"
-            className="input input-bordered input-primary w-full max-w-xs"
-            onChange={(e) => setJudul(e.target.value)}
-          />
-          <label className="block mt-4" htmlFor="isi">
-            Content
-          </label>
-          <textarea
-            id="isi"
-            value={isi}
-            name="isi"
-            onChange={(e) => setIsi(e.target.value)}
-            className="textarea textarea-primary w-full"
-            placeholder="Content"
-            disabled={loading}
-          ></textarea>
-          <label className="block mt-4" htmlFor="penulis">
-            Penulis
-          </label>
-          <input
-            id="penulis"
-            name="penulis"
-            type="text"
-            value={penulis}
-            disabled={loading}
-            placeholder="Type here"
-            className="input input-bordered input-primary w-full max-w-xs"
-            onChange={(e) => setPenulis(e.target.value)}
-          />
-          <button disabled={loading} className="btn mt-4 btn-primary">
-            submit
-          </button>
-        </form>
+            <div>
+              <label className="block text-lg font-medium" htmlFor="headline">
+                Highlight Artikel
+              </label>
+              <input
+                id="headline"
+                name="headline"
+                type="text"
+                value={headline}
+                disabled={loading}
+                placeholder="Type here"
+                className="input input-bordered input-primary w-full h-16"
+                onChange={(e) =>
+                  dispatch({ type: "SET_HEADLINE", payload: e.target.value })
+                }
+              />
+            </div>
+
+            <div>
+              <label className="block text-lg font-medium" htmlFor="judul">
+                Judul
+              </label>
+              <input
+                id="judul"
+                name="judul"
+                type="text"
+                value={judul}
+                disabled={loading}
+                placeholder="Judul Artikel"
+                className="input input-bordered input-primary w-full h-8"
+                onChange={(e) =>
+                  dispatch({ type: "SET_JUDUL", payload: e.target.value })
+                }
+              />
+            </div>
+
+            <div>
+              <label className="block text-lg font-medium" htmlFor="isi">
+                Content
+              </label>
+              <textarea
+                id="isi"
+                value={isi}
+                name="isi"
+                onChange={(e) =>
+                  dispatch({ type: "SET_ISI", payload: e.target.value })
+                }
+                className="textarea textarea-primary w-full h-80"
+                placeholder="Content"
+                disabled={loading}
+              ></textarea>
+            </div>
+
+            <div>
+              <label className="block text-lg font-medium" htmlFor="penulis">
+                Penulis
+              </label>
+              <input
+                id="penulis"
+                name="penulis"
+                type="text"
+                value={penulis}
+                disabled={loading}
+                placeholder="Nama Penulis"
+                className="input input-bordered input-primary w-full h-8"
+                onChange={(e) =>
+                  dispatch({ type: "SET_PENULIS", payload: e.target.value })
+                }
+              />
+            </div>
+
+            <button disabled={loading} className="btn mt-4 btn-primary w-full py-2">
+              Upload
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );

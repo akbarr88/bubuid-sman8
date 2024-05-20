@@ -44,7 +44,7 @@ function Navbar() {
   };
   return (
     <>
-      <div className="p-4 flex bg-[#54BAB9] justify-between lg:justify-around text-white items-center font-poppins ">
+      <div className="p-1 flex bg-[#54BAB9] justify-between lg:justify-around text-white items-center font-poppins ">
         <div>
           <img src={navbarLogo} alt="bubu.id" width={150} />
         </div>

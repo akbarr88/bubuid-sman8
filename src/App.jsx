@@ -36,7 +36,7 @@ function App() {
           <Route path="datalaporan" element={<DataLaporan />} />
           <Route path="datapengguna" element={<DataPengguna />} />
           <Route path="detaillaporan" element={<ReportDetails />} />
-          <Route path="sendemail" element={<ContactUs />} />
+          <Route path="sendemail/:id" element={<ContactUs />} />
         </Route>
       </Routes>
     </>
