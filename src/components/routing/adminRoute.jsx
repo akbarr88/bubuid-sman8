@@ -1,18 +1,26 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { getUsersById } from "../../redux/actions/datauser.action";
 
 export default function AdminRoute() {
-  const dispatch = useDispatch();
+  const [currentUser, setCurrentUser] = useState(null);
+
   const id = localStorage.getItem("id_user");
   const token = localStorage.getItem("token");
   useEffect(() => {
-    dispatch(getUsersById(token, id));
+    async function getUserId() {
+      const res = await axios.get(`http://localhost:3000/users/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setCurrentUser(res.data.data);
+    }
+    getUserId();
   }, [id]);
-  const { usersbyId = null } = useSelector((state) => state.datauser);
-  if (!usersbyId) return <div>loading...</div>;
-  const isAdmin = usersbyId.role === "admin";
+
+  if (!currentUser) return <div>loading...</div>;
+  const isAdmin = currentUser.role === "admin";
 
   return isAdmin ? <Outlet /> : <Navigate to="/" />;
 }

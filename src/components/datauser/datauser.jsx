@@ -1,14 +1,17 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import NavbarAdmin from "../navbar/navbaradmin";
 import { getLapors } from "../../redux/actions/datalaporan.action";
-import axios from "axios";
+import Modal from "../modal/modal";
+import NavbarAdmin from "../navbar/navbaradmin";
 
 function DataLaporan() {
+  const [openModal, setOpenModal] = useState(false);
+  const [userDetail, setuserDetail] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
   const dispatch = useDispatch();
   const { isLoading, lapors } = useSelector((state) => state.lapor);
   const token = localStorage.getItem("token");
-  const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 15;
 
   useEffect(() => {
@@ -16,7 +19,6 @@ function DataLaporan() {
   }, [dispatch, token]);
 
   async function handleStatus(id, status) {
-    console.log(id, status);
     const res = await axios.patch(
       `http://localhost:3000/lapor/${id}/${!status}`,
       {},
@@ -29,6 +31,16 @@ function DataLaporan() {
 
     console.log(res);
   }
+
+  const handleDetail = async (id) => {
+    const res = await axios.get(`http://localhost:3000/lapor/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    setuserDetail(res.data.data.User);
+    setOpenModal((openModal) => !openModal);
+  };
 
   const handleNextPage = () => {
     setCurrentPage((prevPage) => prevPage + 1);
@@ -61,7 +73,7 @@ function DataLaporan() {
             {currentItems.map((lapor, index) => (
               <tr
                 key={index}
-                className={index === 0 ? "" : "border-t-2 border-gray-200"} 
+                className={index === 0 ? "" : "border-t-2 border-gray-200"}
               >
                 <td>{index + 1 + indexOfFirstItem}</td>
                 <td>
@@ -81,13 +93,20 @@ function DataLaporan() {
                     className={`px-2 py-1 text-white rounded ${
                       lapor?.Status?.verified ? "bg-green-500" : "bg-red-500"
                     } btn btn-ghost btn-xs`}
-                    onClick={() => handleStatus(lapor.id, lapor.Status.verified)}
+                    onClick={() =>
+                      handleStatus(lapor.id, lapor.Status.verified)
+                    }
                   >
                     {lapor?.Status?.verified ? "verified" : "unverified"}
                   </button>
                 </td>
                 <th>
-                  <button className="btn btn-ghost btn-xs">details</button>
+                  <button
+                    onClick={() => handleDetail(lapor.id)}
+                    className="btn btn-ghost btn-xs"
+                  >
+                    details
+                  </button>
                 </th>
               </tr>
             ))}
@@ -103,7 +122,9 @@ function DataLaporan() {
           >
             {currentPage === 1 ? "Prev" : currentPage - 1}
           </button>
-          <span className="px-3 py-1 bg-blue-400 text-gray-700 rounded-md mr-2">{currentPage}</span>
+          <span className="px-3 py-1 bg-blue-400 text-gray-700 rounded-md mr-2">
+            {currentPage}
+          </span>
           <button
             className="px-3 py-1 bg-gray-200 text-gray-700 rounded-md mr-2"
             onClick={handleNextPage}
@@ -113,6 +134,20 @@ function DataLaporan() {
           </button>
         </div>
       )}
+      <Modal isOpen={openModal} onClose={() => setOpenModal((modal) => !modal)}>
+        <div className="w-full">
+          <h2 className="text-2xl font-bold">Name</h2>
+          <p className="mt-1 text-xl">{userDetail?.nama}</p>
+          <h2 className="text-2xl mt-2 font-bold">Email</h2>
+          <p className="mt-1 text-xl">{userDetail?.email}</p>
+          <h2 className="text-2xl mt-2 font-bold">Umur</h2>
+          <p className="mt-1 text-xl">{userDetail?.umur}</p>
+          <h2 className="text-2xl mt-2 font-bold">Jenis Kelamin</h2>
+          <p className="mt-1 text-xl">{userDetail?.jenis_kelamin}</p>
+          <h2 className="text-2xl mt-2 font-bold">Sekolah</h2>
+          <p className="mt-1 text-xl">{userDetail?.sekolah}</p>
+        </div>
+      </Modal>
     </div>
   );
 }

@@ -1,8 +1,29 @@
 import emailjs from "@emailjs/browser";
-import React, { useRef } from "react";
+import axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
 import NavbarAdmin from "../navbar/navbaradmin";
 
 export const ContactUs = () => {
+  const [user, setUser] = useState({});
+  const { id } = useParams();
+  console.log(id);
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    async function getDatafromLapor() {
+      const res = await axios.get(`http://localhost:3000/lapor/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setUser(res.data.data.User);
+    }
+    getDatafromLapor();
+  }, [id]);
+
+  console.log(user);
+
   const form = useRef();
 
   const sendEmail = (e) => {
@@ -45,6 +66,8 @@ export const ContactUs = () => {
                 type="text"
                 name="user_name"
                 id="user_name"
+                disabled
+                value={user?.nama}
                 className="input input-bordered input-primary w-full h-8"
                 required
               />
@@ -53,15 +76,17 @@ export const ContactUs = () => {
             <div>
               <label
                 htmlFor="user_email"
-                className="block text-lg font-medium text-gray-700"
+                className="hidden text-lg font-medium text-gray-700"
               >
                 Email
               </label>
               <input
                 type="email"
                 name="user_email"
+                disabled
+                value={user?.email}
                 id="user_email"
-                className="input input-bordered input-primary w-full h-8"
+                className="input hidden input-bordered input-primary w-full h-8"
                 required
               />
             </div>

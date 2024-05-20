@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import AboutBullying from "./components/aboutbullying/aboutbullying";
@@ -19,16 +17,8 @@ import AdminRoute from "./components/routing/adminRoute";
 import PrivateRoute from "./components/routing/privateRoute";
 import { ContactUs } from "./components/sendemail/send";
 import UploadArtikel from "./components/uploadartikel/UploadArtikel";
-import { getUsersById } from "./redux/actions/datauser.action";
 
 function App() {
-  const dispatch = useDispatch();
-  const id = localStorage.getItem("id_user");
-  const token = localStorage.getItem("token");
-  useEffect(() => {
-    dispatch(getUsersById(token, id));
-  }, [id]);
-
   return (
     <>
       <Routes>

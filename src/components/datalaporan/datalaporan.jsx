@@ -1,9 +1,9 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import NavbarAdmin from "../navbar/navbaradmin";
 import { getLapors } from "../../redux/actions/datalaporan.action";
-import axios from "axios";
+import NavbarAdmin from "../navbar/navbaradmin";
 
 function DataLaporan() {
   const dispatch = useDispatch();
@@ -77,7 +77,9 @@ function DataLaporan() {
                     className={`px-2 py-1 text-white rounded ${
                       lapor?.Status?.verified ? "bg-green-500" : "bg-red-500"
                     } btn btn-ghost btn-xs`}
-                    onClick={() => handleStatus(lapor.id, lapor.Status.verified)}
+                    onClick={() =>
+                      handleStatus(lapor.id, lapor.Status.verified)
+                    }
                   >
                     {lapor?.Status?.verified ? "verified" : "unverified"}
                   </button>
