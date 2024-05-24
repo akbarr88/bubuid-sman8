@@ -26,7 +26,10 @@ function Login() {
     try {
       const response = await axios.post(
         "http://localhost:3000/auth/login",
-        user
+        user,
+        {
+          withCredentials: true,
+        }
       );
       const data = response.data;
       console.log(response.data);

@@ -1,8 +1,8 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getLapors } from "../../redux/actions/datalaporan.action";
+import isEmpty from "../../utils/empetyObject";
 import NavbarAdmin from "../navbar/navbaradmin";
 
 function DataLaporan() {
@@ -10,42 +10,16 @@ function DataLaporan() {
   const navigate = useNavigate();
   const { isLoading, lapors } = useSelector((state) => state.lapor);
   const token = localStorage.getItem("token");
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 15;
+  const [currentPage, setCurrentPage] = useState(lapors.currentPage || 1);
 
   useEffect(() => {
-    dispatch(getLapors(token));
-  }, [dispatch, token]);
+    dispatch(getLapors(token, currentPage));
+  }, [dispatch, token, currentPage]);
 
-  async function handleStatus(id, status) {
-    console.log(id, status);
-    const res = await axios.patch(
-      `http://localhost:3000/lapor/${id}/${!status}`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    console.log(res);
-  }
-
-  const handleNextPage = () => {
-    setCurrentPage((prevPage) => prevPage + 1);
-  };
-
-  const handlePrevPage = () => {
-    setCurrentPage((prevPage) => prevPage - 1);
-  };
-
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = lapors.slice(indexOfFirstItem, indexOfLastItem);
+  if (isEmpty(lapors)) return <div>loading...</div>;
 
   return (
-    <div className="overflow-x-auto bg-[#faffff]">
+    <div className="overflow-x-auto bg-[#faffff] h-screen">
       <NavbarAdmin />
       <div className="mx-auto max-w-4xl">
         <table className="table mt-8 w-full">
@@ -60,9 +34,9 @@ function DataLaporan() {
             </tr>
           </thead>
           <tbody>
-            {currentItems.map((lapor, index) => (
+            {lapors?.data?.map((lapor, index) => (
               <tr key={index}>
-                <td className="px-4 py-2">{index + 1 + indexOfFirstItem}</td>
+                <td className="px-4 py-2">{index + 1}</td>
                 <td className="px-4 py-2">
                   <div className="flex items-center gap-3">
                     <div className="font-bold">{lapor?.User?.nama}</div>
@@ -94,27 +68,26 @@ function DataLaporan() {
           </tbody>
         </table>
       </div>
-      {lapors.length > itemsPerPage && (
-        <div className="pagination flex items-center justify-center mt-4 mb-8">
-          <button
-            className="px-3 py-1 bg-gray-200 text-gray-700 rounded-md mr-2"
-            onClick={handlePrevPage}
-            disabled={currentPage === 1}
-          >
-            Prev
-          </button>
-          <span className="px-3 py-1 bg-blue-400 text-gray-700 rounded-md mr-2">
-            {currentPage}
-          </span>
-          <button
-            className="px-3 py-1 bg-gray-200 text-gray-700 rounded-md mr-2"
-            onClick={handleNextPage}
-            disabled={indexOfLastItem >= lapors.length}
-          >
-            Next
-          </button>
-        </div>
-      )}
+
+      <div className="pagination flex items-center justify-center mt-4 mb-8">
+        <button
+          className="px-3 py-1 bg-gray-200 text-gray-700 rounded-md mr-2"
+          onClick={() => setCurrentPage(currentPage - 1)}
+          disabled={currentPage === 1}
+        >
+          Prev
+        </button>
+        <span className="px-3 py-1 bg-blue-400 text-gray-700 rounded-md mr-2">
+          {currentPage}
+        </span>
+        <button
+          className="px-3 py-1 bg-gray-200 text-gray-700 rounded-md mr-2"
+          onClick={() => setCurrentPage(currentPage + 1)}
+          disabled={lapors.currentPage === lapors.totalPages}
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 }

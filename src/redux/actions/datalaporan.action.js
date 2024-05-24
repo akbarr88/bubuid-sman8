@@ -1,16 +1,19 @@
 import axios from "axios";
 
-export function getLapors(token) {
+export function getLapors(token, page = 1) {
   return async function (dispatch) {
     dispatch(startFetching());
 
     try {
-      const { data } = await axios.get("http://localhost:3000/lapor", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      dispatch(successGetLapors(data.data));
+      const { data } = await axios.get(
+        `http://localhost:3000/lapor?page=${page}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      dispatch(successGetLapors(data));
     } catch (error) {
       // Menangani kesalahan langsung di sini
       dispatch({

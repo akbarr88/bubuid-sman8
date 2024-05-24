@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -9,26 +8,11 @@ function DashboardAdmin() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isLoading, lapors } = useSelector((state) => state.lapor);
+  console.log(lapors);
   const token = localStorage.getItem("token");
-
   useEffect(() => {
     dispatch(getLapors(token));
   }, [dispatch, token]);
-
-  async function handleStatus(id, status) {
-    console.log(id, status);
-    const res = await axios.patch(
-      `http://localhost:3000/lapor/${id}/${!status}`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    console.log(res);
-  }
 
   return (
     <div className="overflow-x-auto bg-[#faffff] min-h-screen">
@@ -39,19 +23,19 @@ function DashboardAdmin() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 py-4">
             <div className="bg-blue-500 text-white p-4 rounded-md">
               <h2 className="text-xl font-bold mb-2">Total Laporan</h2>
-              <p>100</p>
+              <p>{lapors.totalItems}</p>
             </div>
             <div className="bg-green-500 text-white p-4 rounded-md">
               <h2 className="text-xl font-bold mb-2">Laporan Diterima</h2>
-              <p>80</p>
+              <p>{lapors.totalLaporVerified}</p>
             </div>
             <div className="bg-red-500 text-white p-4 rounded-md">
               <h2 className="text-xl font-bold mb-2">Laporan Ditolak</h2>
-              <p>20</p>
+              <p>{lapors.totalItems - lapors.totalLaporVerified}</p>
             </div>
           </div>
         </div>
-        <div className="bg-blue-300 shadow-md p-4 mt-4 rounded-md">
+        <div className="bg-blue-300 h-full shadow-md p-4 mt-4 rounded-md">
           <h2 className="text-xl font-bold mb-4 text-white">
             Daftar Laporan Terbaru
           </h2>
@@ -68,7 +52,7 @@ function DashboardAdmin() {
                 </tr>
               </thead>
               <tbody>
-                {lapors.slice(0, 3).map((lapor, index) => (
+                {lapors?.data?.slice(0, 3).map((lapor, index) => (
                   <tr
                     key={lapor.id}
                     className={index === 0 ? "" : "border-t-2 border-gray-200"}
@@ -86,18 +70,15 @@ function DashboardAdmin() {
                     </td>
                     <td>{lapor.keterangan}</td>
                     <td className="text-center">
-                      <button
+                      <div
                         className={`px-2 py-1 text-white rounded ${
                           lapor?.Status?.verified
                             ? "bg-green-500"
                             : "bg-red-500"
-                        } btn btn-ghost btn-xs`}
-                        onClick={() =>
-                          handleStatus(lapor.id, lapor.Status.verified)
-                        }
+                        } `}
                       >
                         {lapor?.Status?.verified ? "verified" : "unverified"}
-                      </button>
+                      </div>
                     </td>
                     <td className="text-center">
                       <button

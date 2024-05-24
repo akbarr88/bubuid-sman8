@@ -100,7 +100,7 @@ export default function UploadArtikel() {
         signal,
       });
 
-      alert("Artikel Created");
+      dispatch({ type: "SET_LOADING", payload: false });
       return response;
     } catch (error) {
       if (error.response && error.response.status === 403) {

@@ -46,13 +46,9 @@ export const ContactUs = () => {
     }
 
     emailjs
-      .sendForm(
-        "service_lm5mjg2",
-        "template_2lkri7p",
-        form.current,
-        "2uQ4J85t_H1lQx6Z5"
-      )
-
+      .sendForm("service_lm5mjg2", "template_2lkri7p", form.current, {
+        publicKey: "2uQ4J85t_H1lQx6Z5",
+      })
       .then(
         () => {
           console.log("SUCCESS!");
@@ -83,26 +79,24 @@ export const ContactUs = () => {
                 type="text"
                 name="user_name"
                 id="user_name"
-                disabled
-                value={user?.nama}
                 className="input input-bordered input-primary w-full h-8"
                 required
               />
             </div>
-
             <div>
-              <label
-                htmlFor="user_email"
-                className="hidden text-lg font-medium text-gray-700"
-              >
-                Email
-              </label>
+              <input
+                type="text"
+                name="to_name"
+                value={user.nama}
+                id="to_name"
+                className="input hidden input-bordered input-primary w-full h-8"
+                required
+              />
               <input
                 type="email"
-                name="user_email"
-                disabled
-                value={user?.email}
-                id="user_email"
+                name="to_email"
+                value={user.email}
+                id="to_email"
                 className="input hidden input-bordered input-primary w-full h-8"
                 required
               />

@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
-import Navbar from "../navbar/navbar";
-import Footer from "../footer/footer";
-import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import logoFb from "../../assets/Logofb.png";
+import logoGoogle from "../../assets/Logogugel.png";
+import logoIg from "../../assets/Logoig.png";
 import { getArtikelById } from "../../redux/actions/artikel.action";
-import logoFb from "../../assets/Logofb.png"
-import logoGoogle from "../../assets/Logogugel.png"
-import logoIg from "../../assets/Logoig.png"
+import Footer from "../footer/footer";
+import Navbar from "../navbar/navbar";
 
 function Bacaartikel() {
   const dispatch = useDispatch();
@@ -15,7 +15,7 @@ function Bacaartikel() {
 
   const { id } = useParams();
 
-    useEffect(() => {
+  useEffect(() => {
     dispatch(getArtikelById(token, id));
   }, []);
 
@@ -46,16 +46,16 @@ function Bacaartikel() {
               className="mx-auto mt-5 mb-5 rounded-md"
               alt=""
             />
-            <p className="indent-8 font-sm tracking-normal">
-              {artikelbyId.isi}
-            </p>
+            <div
+              className="whitespace-pre-wrap"
+              dangerouslySetInnerHTML={{ __html: artikelbyId.isi }}
+            ></div>
           </div>
           <div className="justify-between p-2">
             <div className="flex gap-4 items-center left-content">
               <img src={artikelbyId.profil_penulis} width={30} alt="" />
               <div className="">
                 <p>{artikelbyId.penulis}</p>
-
               </div>
               <div className="flex gap-4">
                 <a>
