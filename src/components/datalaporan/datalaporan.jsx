@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -17,7 +18,7 @@ function DataLaporan() {
   const [selectedLapor, setSelectedLapor] = useState(null);
 
   // State untuk filter tanggal
-  const [sortOrder, setSortOrder] = useState('desc'); // default: newest first
+  const [sortOrder, setSortOrder] = useState("desc"); // default: newest first
 
   useEffect(() => {
     dispatch(getLapors(token, currentPage));
@@ -36,14 +37,24 @@ function DataLaporan() {
   };
 
   const handleDateSort = () => {
-    setSortOrder((prevOrder) => (prevOrder === 'desc' ? 'asc' : 'desc'));
+    setSortOrder((prevOrder) => (prevOrder === "desc" ? "asc" : "desc"));
+  };
+
+  const handleDelete = async (laporId) => {
+    const res = await axios.delete(`http://localhost:3000/lapor/${laporId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return res.data;
   };
 
   // Sort data by date based on sortOrder
   const sortedLapors = [...lapors.data].sort((a, b) => {
     const dateA = new Date(a.tanggal);
     const dateB = new Date(b.tanggal);
-    return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+    return sortOrder === "desc" ? dateB - dateA : dateA - dateB;
   });
 
   return (
@@ -55,8 +66,11 @@ function DataLaporan() {
             <tr>
               <th className="w-20 text-left px-4 py-2">No</th>
               <th className="w-60 text-left px-4 py-2">Nama</th>
-              <th className="w-32 text-left px-4 py-2 cursor-pointer" onClick={handleDateSort}>
-                Tanggal {sortOrder === 'desc' ? '▼' : '▲'}
+              <th
+                className="w-32 text-left px-4 py-2 cursor-pointer"
+                onClick={handleDateSort}
+              >
+                Tanggal {sortOrder === "desc" ? "▼" : "▲"}
               </th>
               <th className="w-40 text-left px-4 py-2">Keterangan</th>
               <th className="w-20 text-center px-4 py-2">Status</th>
@@ -92,12 +106,18 @@ function DataLaporan() {
                     {lapor?.Status?.verified ? "verified" : "unverified"}
                   </h3>
                 </td>
-                <td className="px-4 py-2 text-center">
+                <td className="px-4 py-2 flex gap-2  justify-center items-center text-center">
                   <button
                     className="btn btn-ghost btn-xs"
                     onClick={() => navigate(`/sendemail/${lapor.id}`)}
                   >
                     Reply
+                  </button>
+                  <button
+                    className="bg-red-500 text-white px-2 py-1 rounded"
+                    onClick={() => handleDelete(lapor.id)}
+                  >
+                    Delete
                   </button>
                 </td>
               </tr>
