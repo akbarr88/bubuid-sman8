@@ -24,7 +24,7 @@ function Bacaartikel() {
       <Navbar />
       <div
         className="hero"
-        style={{ backgroundImage: "url(src/assets/bacaartikel.jpeg)" }}
+        style={{ backgroundImage: "url('/src/assets/frameArtikel.png')" }}
       >
         <div className="hero-overlay"></div>
         <div className="hero-content text-center text-neutral-content">
@@ -43,7 +43,7 @@ function Bacaartikel() {
             <img
               src={artikelbyId.gambar}
               width={400}
-              className="mx-auto mt-5 mb-5 rounded-md"
+              className="mx-auto mt-8 mb-10 rounded-md"
               alt=""
             />
             <div
@@ -51,23 +51,23 @@ function Bacaartikel() {
               dangerouslySetInnerHTML={{ __html: artikelbyId.isi }}
             ></div>
           </div>
-          <div className="justify-between p-2">
-            <div className="flex gap-4 items-center left-content">
+          <div className="justify-between p-2 mt-10">
+            <div className="flex gap-4 items-center">
               <img src={artikelbyId.profil_penulis} width={30} alt="" />
-              <div className="">
+              <div>
                 <p>{artikelbyId.penulis}</p>
               </div>
-              <div className="flex gap-4">
-                <a>
-                  <img src={logoFb} width={20} alt="" />
-                </a>
-                <a>
-                  <img src={logoGoogle} width={20} alt="" />
-                </a>
-                <a>
-                  <img src={logoIg} width={20} alt="" />
-                </a>
-              </div>
+            </div>
+            <div className="flex gap-4 mt-4 ml-12">
+              <a>
+                <img src={logoFb} width={20} alt="" />
+              </a>
+              <a>
+                <img src={logoGoogle} width={20} alt="" />
+              </a>
+              <a>
+                <img src={logoIg} width={20} alt="" />
+              </a>
             </div>
           </div>
         </div>

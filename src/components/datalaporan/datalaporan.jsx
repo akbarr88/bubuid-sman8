@@ -12,11 +12,39 @@ function DataLaporan() {
   const token = localStorage.getItem("token");
   const [currentPage, setCurrentPage] = useState(lapors.currentPage || 1);
 
+  // State untuk modal
+  const [showModal, setShowModal] = useState(false);
+  const [selectedLapor, setSelectedLapor] = useState(null);
+
+  // State untuk filter tanggal
+  const [sortOrder, setSortOrder] = useState('desc'); // default: newest first
+
   useEffect(() => {
     dispatch(getLapors(token, currentPage));
   }, [dispatch, token, currentPage]);
 
-  if (isEmpty(lapors)) return <div>loading...</div>;
+  if (isEmpty(lapors)) return <div>Loading...</div>;
+
+  const openModal = (lapor) => {
+    setSelectedLapor(lapor);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setSelectedLapor(null);
+    setShowModal(false);
+  };
+
+  const handleDateSort = () => {
+    setSortOrder((prevOrder) => (prevOrder === 'desc' ? 'asc' : 'desc'));
+  };
+
+  // Sort data by date based on sortOrder
+  const sortedLapors = [...lapors.data].sort((a, b) => {
+    const dateA = new Date(a.tanggal);
+    const dateB = new Date(b.tanggal);
+    return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+  });
 
   return (
     <div className="overflow-x-auto bg-[#faffff] h-screen">
@@ -26,15 +54,17 @@ function DataLaporan() {
           <thead>
             <tr>
               <th className="w-20 text-left px-4 py-2">No</th>
-              <th className="w-60 text-left px-4 py-2">Name</th>
-              <th className="w-80 text-left px-4 py-2">Tanggal</th>
-              <th className="w-80 text-left px-4 py-2">Keterangan</th>
+              <th className="w-60 text-left px-4 py-2">Nama</th>
+              <th className="w-32 text-left px-4 py-2 cursor-pointer" onClick={handleDateSort}>
+                Tanggal {sortOrder === 'desc' ? '▼' : '▲'}
+              </th>
+              <th className="w-40 text-left px-4 py-2">Keterangan</th>
               <th className="w-20 text-center px-4 py-2">Status</th>
-              <th className="w-20 text-center px-4 py-2">Actions</th>
+              <th className="w-30 text-center px-4 py-2">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {lapors?.data?.map((lapor, index) => (
+            {sortedLapors.map((lapor, index) => (
               <tr key={index}>
                 <td className="px-4 py-2">{index + 1}</td>
                 <td className="px-4 py-2">
@@ -42,13 +72,20 @@ function DataLaporan() {
                     <div className="font-bold">{lapor?.User?.nama}</div>
                   </div>
                 </td>
-                <td className="px-4 py-2">
+                <td className="px-1 py-2">
                   {lapor.tanggal ? lapor.tanggal.substring(0, 10) : "-"}
                 </td>
-                <td className="px-4 py-2">{lapor.keterangan}</td>
                 <td className="px-4 py-2 text-center">
+                  <button
+                    className="btn btn-ghost btn-xs mr-16"
+                    onClick={() => openModal(lapor)}
+                  >
+                    Detail
+                  </button>
+                </td>
+                <td className="px-3 py-2 text-center">
                   <h3
-                    className={`px-2 py-1 text-white rounded ${
+                    className={`px-1 py-1 text-white rounded ${
                       lapor?.Status?.verified ? "bg-green-500" : "bg-red-500"
                     } `}
                   >
@@ -60,7 +97,7 @@ function DataLaporan() {
                     className="btn btn-ghost btn-xs"
                     onClick={() => navigate(`/sendemail/${lapor.id}`)}
                   >
-                    reply
+                    Reply
                   </button>
                 </td>
               </tr>
@@ -88,6 +125,21 @@ function DataLaporan() {
           Next
         </button>
       </div>
+
+      {showModal && selectedLapor && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-4 rounded-md w-1/2">
+            <h2 className="text-xl font-bold mb-4">Detail Keterangan</h2>
+            <p>{selectedLapor.keterangan}</p>
+            <button
+              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+              onClick={closeModal}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

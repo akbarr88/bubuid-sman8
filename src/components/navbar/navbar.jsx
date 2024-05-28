@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Link, Navigate, Route, Routes } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import axios from "axios";
-import { data } from "autoprefixer";
-import navbarLogo from "../../assets/navbar.png"
+import navbarLogo from "../../assets/navbar.png";
 
 function Navbar() {
   const [isClick, setIsClick] = useState(false);
@@ -10,6 +9,7 @@ function Navbar() {
   const [user, setUser] = useState({});
   const token = localStorage.getItem("token");
   const id = localStorage.getItem("id_user");
+
   useEffect(() => {
     getDataUser();
   }, []);
@@ -35,16 +35,16 @@ function Navbar() {
 
   const handleLogout = () => {
     const isConfirmed = window.confirm("Apakah Anda yakin ingin logout?");
-
     if (isConfirmed) {
       localStorage.removeItem("token");
       localStorage.removeItem("id_user");
       window.location.href = "/";
     }
   };
+
   return (
     <>
-      <div className="p-1 flex bg-[#54BAB9] justify-between lg:justify-around text-white items-center font-poppins ">
+      <div className="p-1 flex bg-[#54BAB9] justify-between lg:justify-around text-white items-center font-poppins">
         <div>
           <img src={navbarLogo} alt="bubu.id" width={150} />
         </div>
@@ -55,49 +55,91 @@ function Navbar() {
               : "hidden lg:flex"
           }`}
         >
-          <ul className="lg:flex gap-12 p-2 tracking-wider ml-8  ">
+          <ul className="lg:flex gap-12 p-2 tracking-wider ml-8">
             <li className="hover:bg-white px-2 py-2 hover:text-black hover:rounded-xl text-xs mr-8">
-              <Link to="/">HOME</Link>
+              <NavLink
+                to="/"
+                className={({ isActive }) =>
+                  isActive ? "bg-white text-black rounded-xl px-2 py-1" : "px-2 py-1"
+                }
+              >
+                HOME
+              </NavLink>
             </li>
             <li className="hover:bg-white px-2 py-2 hover:text-black hover:rounded-xl text-xs mr-8">
               {isLogin ? (
-                <Link to="/aboutbullying">ABOUT BULLYING</Link>
+                <NavLink
+                  to="/aboutbullying"
+                  className={({ isActive }) =>
+                    isActive ? "bg-white text-black rounded-xl px-2 py-1" : "px-2 py-1"
+                  }
+                >
+                  ABOUT BULLYING
+                </NavLink>
               ) : (
-                <Link to="/login">ABOUT BULLYING</Link>
+                <NavLink
+                  to="/login"
+                  className={({ isActive }) =>
+                    isActive ? "bg-white text-black rounded-xl px-2 py-1" : "px-2 py-1"
+                  }
+                >
+                  ABOUT BULLYING
+                </NavLink>
               )}
             </li>
             <li className="hover:bg-white px-2 py-2 hover:text-black hover:rounded-xl text-xs mr-8">
               {isLogin ? (
-                <Link to="/lapor">LAPOR</Link>
+                <NavLink
+                  to="/lapor"
+                  className={({ isActive }) =>
+                    isActive ? "bg-white text-black rounded-xl px-2 py-1" : "px-2 py-1"
+                  }
+                >
+                  LAPOR
+                </NavLink>
               ) : (
-                <Link to="/login">LAPOR</Link>
+                <NavLink
+                  to="/login"
+                  className={({ isActive }) =>
+                    isActive ? "bg-white text-black rounded-xl px-2 py-1" : "px-2 py-1"
+                  }
+                >
+                  LAPOR
+                </NavLink>
               )}
             </li>
             <li className="hover:bg-white px-2 py-2 hover:text-black hover:rounded-xl text-xs mr-8">
               {isLogin ? (
-                <Link to="/artikel">ARTIKEL</Link>
+                <NavLink
+                  to="/artikel"
+                  className={({ isActive }) =>
+                    isActive ? "bg-white text-black rounded-xl px-2 py-1" : "px-2 py-1"
+                  }
+                >
+                  ARTIKEL
+                </NavLink>
               ) : (
-                <Link to="/login">ARTIKEL</Link>
+                <NavLink
+                  to="/login"
+                  className={({ isActive }) =>
+                    isActive ? "bg-white text-black rounded-xl" : ""
+                  }
+                >
+                  ARTIKEL
+                </NavLink>
               )}
             </li>
-            {/* <li className="hover:bg-white px-2 py-1 hover:text-black hover:rounded-xl text-xs">
-              <Link to="/">FORUM</Link>
-            </li>
-            <li className="hover:bg-white px-2 py-1 hover:text-black hover:rounded-xl text-xs">
-              <Link to="/aboutus">ABOUT US</Link>
-            </li> */}
             <div className="inline-flex lg:flex gap-3 mt-2 text-black lg:ml-10 lg:mt-0 text-sm w-fit">
-              <Link to="/login">
+              <NavLink to="/login">
                 <button
                   className={`${
                     isLogin ? "hidden" : "bg-white px-2 rounded-lg"
                   }`}
-                  // onClick={handleLogin}
                 >
                   Login
                 </button>
-              </Link>
-              <Link to="/register">
+              </NavLink>
+              <NavLink to="/register">
                 <button
                   className={`${
                     isLogin ? "hidden" : "bg-white px-2 rounded-lg"
@@ -105,9 +147,13 @@ function Navbar() {
                 >
                   Daftar
                 </button>
-              </Link>
+              </NavLink>
               <div
-                className={`${isLogin ? "flex gap-2 text-white hover:bg-white px-2 py-1 hover:text-black hover:rounded-xl text-xs" : "hidden"}`}
+                className={`${
+                  isLogin
+                    ? "flex gap-2 text-white hover:bg-white px-2 py-1 hover:text-black hover:rounded-xl text-xs"
+                    : "hidden"
+                }`}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

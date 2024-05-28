@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getLapors } from "../../redux/actions/datalaporan.action";
@@ -8,11 +8,28 @@ function DashboardAdmin() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isLoading, lapors } = useSelector((state) => state.lapor);
-  console.log(lapors);
   const token = localStorage.getItem("token");
+
+  // State untuk modal
+  const [showModal, setShowModal] = useState(false);
+  const [selectedLapor, setSelectedLapor] = useState(null);
+
   useEffect(() => {
     dispatch(getLapors(token));
   }, [dispatch, token]);
+
+  const openModal = (lapor) => {
+    setSelectedLapor(lapor);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setSelectedLapor(null);
+    setShowModal(false);
+  };
+
+  // Urutkan laporan berdasarkan tanggal dari yang terbaru ke yang terlama
+  const sortedLapors = lapors?.data?.sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal)) || [];
 
   return (
     <div className="overflow-x-auto bg-[#faffff] min-h-screen">
@@ -26,11 +43,11 @@ function DashboardAdmin() {
               <p>{lapors.totalItems}</p>
             </div>
             <div className="bg-green-500 text-white p-4 rounded-md">
-              <h2 className="text-xl font-bold mb-2">Laporan Diterima</h2>
+              <h2 className="text-xl font-bold mb-2">Verified</h2>
               <p>{lapors.totalLaporVerified}</p>
             </div>
             <div className="bg-red-500 text-white p-4 rounded-md">
-              <h2 className="text-xl font-bold mb-2">Laporan Ditolak</h2>
+              <h2 className="text-xl font-bold mb-2">Unverified</h2>
               <p>{lapors.totalItems - lapors.totalLaporVerified}</p>
             </div>
           </div>
@@ -43,21 +60,21 @@ function DashboardAdmin() {
             <table className="table mt-8">
               <thead>
                 <tr>
-                  <th className="w-20">No</th>
-                  <th className="w-60">Name</th>
-                  <th className="w-80">Tanggal</th>
-                  <th className="w-80">Keterangan</th>
-                  <th className="w-20">Status</th>
-                  <th className="w-20">Aksi</th>
+                  <th className="w-20 text-left px-4 py-2">No</th>
+                  <th className="w-60 text-left px-4 py-2">Nama</th>
+                  <th className="w-32 text-left px-4 py-2">Tanggal</th>
+                  <th className="w-40 text-left px-4 py-2">Keterangan</th>
+                  <th className="w-20 text-center px-4 py-2">Status</th>
+                  <th className="w-30 text-center px-4 py-2">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {lapors?.data?.slice(0, 3).map((lapor, index) => (
+                {sortedLapors.slice(0, 3).map((lapor, index) => (
                   <tr
                     key={lapor.id}
                     className={index === 0 ? "" : "border-t-2 border-gray-200"}
                   >
-                    <td className="text-center">{index + 1}</td>
+                    <td>{index + 1}</td>
                     <td>
                       <div className="flex items-center gap-3">
                         <div>
@@ -65,10 +82,17 @@ function DashboardAdmin() {
                         </div>
                       </div>
                     </td>
-                    <td className="text-center">
+                    <td className="px-1 py-2">
                       {lapor.tanggal ? lapor.tanggal.substring(0, 10) : "-"}
                     </td>
-                    <td>{lapor.keterangan}</td>
+                    <td className="px-4 py-2 text-center">
+                      <button
+                        className="btn btn-ghost btn-xs mr-16"
+                        onClick={() => openModal(lapor)}
+                      >
+                        Detail
+                      </button>
+                    </td>
                     <td className="text-center">
                       <div
                         className={`px-2 py-1 text-white rounded ${
@@ -85,7 +109,7 @@ function DashboardAdmin() {
                         className="btn btn-ghost btn-xs"
                         onClick={() => navigate(`/sendemail/${lapor.id}`)}
                       >
-                        reply
+                        Reply
                       </button>
                     </td>
                   </tr>
@@ -95,6 +119,21 @@ function DashboardAdmin() {
           </div>
         </div>
       </div>
+
+      {showModal && selectedLapor && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-4 rounded-md w-1/2">
+            <h2 className="text-xl font-bold mb-4">Detail Keterangan</h2>
+            <p>{selectedLapor.keterangan}</p>
+            <button
+              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+              onClick={closeModal}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -149,7 +149,7 @@ export default function UploadArtikel() {
                 value={headline}
                 disabled={loading}
                 placeholder="Type here"
-                className="input input-bordered input-primary w-full h-16"
+                className="input input-bordered input-primary w-full h-8"
                 onChange={(e) =>
                   dispatch({ type: "SET_HEADLINE", payload: e.target.value })
                 }
