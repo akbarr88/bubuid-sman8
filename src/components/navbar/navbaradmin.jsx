@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import axios from "axios";
 
 function NavbarAdmin() {
   const [isClick, setIsClick] = useState(false);
@@ -10,24 +9,24 @@ function NavbarAdmin() {
   const id = localStorage.getItem("id_user");
   const location = useLocation(); // Hook to get the current location
 
-  useEffect(() => {
-    getDataUser();
-  }, []);
+  // useEffect(() => {
+  //   getDataUser();
+  // }, []);
 
-  const getDataUser = async () => {
-    try {
-      const { data } = await axios.get(`https://calm-ruby-chicken-tam.cyclic.app/users/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setUser(data);
-      setIsLogin(!!data);
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-      setIsLogin(false);
-    }
-  };
+  // const getDataUser = async () => {
+  //   try {
+  //     const { data } = await axios.get(`https://calm-ruby-chicken-tam.cyclic.app/users/${id}`, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
+  //     setUser(data);
+  //     setIsLogin(!!data);
+  //   } catch (error) {
+  //     console.error("Error fetching user data:", error);
+  //     setIsLogin(false);
+  //   }
+  // };
 
   const handleNavbar = () => {
     setIsClick(!isClick);
@@ -60,16 +59,32 @@ function NavbarAdmin() {
           }`}
         >
           <ul className="lg:flex gap-16 p-2 trackingwider ml-40 ">
-            <li className={`hover:bg-white px-2 py-1 hover:text-black hover:rounded-xl text-xs ${isActive('/dashboardadmin') && 'bg-white text-black rounded-xl'}`}>
+            <li
+              className={`hover:bg-white px-2 py-1 hover:text-black hover:rounded-xl text-xs ${
+                isActive("/dashboardadmin") && "bg-white text-black rounded-xl"
+              }`}
+            >
               <Link to="/dashboardadmin">DASHBOARD ADMIN</Link>
             </li>
-            <li className={`hover:bg-white px-2 py-1 hover:text-black hover:rounded-xl text-xs ${isActive('/datalaporan') && 'bg-white text-black rounded-xl'}`}>
+            <li
+              className={`hover:bg-white px-2 py-1 hover:text-black hover:rounded-xl text-xs ${
+                isActive("/datalaporan") && "bg-white text-black rounded-xl"
+              }`}
+            >
               <Link to="/datalaporan">DATA LAPORAN</Link>
             </li>
-            <li className={`hover:bg-white px-2 py-1 hover:text-black hover:rounded-xl text-xs ${isActive('/datapengguna') && 'bg-white text-black rounded-xl'}`}>
+            <li
+              className={`hover:bg-white px-2 py-1 hover:text-black hover:rounded-xl text-xs ${
+                isActive("/datapengguna") && "bg-white text-black rounded-xl"
+              }`}
+            >
               <Link to="/datapengguna">DATA USER</Link>
             </li>
-            <li className={`hover:bg-white px-2 py-1 hover:text-black hover:rounded-xl text-xs ${isActive('/uploadartikel') && 'bg-white text-black rounded-xl'}`}>
+            <li
+              className={`hover:bg-white px-2 py-1 hover:text-black hover:rounded-xl text-xs ${
+                isActive("/uploadartikel") && "bg-white text-black rounded-xl"
+              }`}
+            >
               <Link to="/uploadartikel">UPLOAD ARTIKEL</Link>
             </li>
             <svg
@@ -88,7 +103,9 @@ function NavbarAdmin() {
               />
             </svg>
             <div className="inline-flex lg:flex gap-3 mt-2 text-black lg:ml-60 lg:mt-0 text-sm w-fit">
-              <div className={`${isLogin ? "flex gap-2 text-white" : "hidden"}`}>
+              <div
+                className={`${isLogin ? "flex gap-2 text-white" : "hidden"}`}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"

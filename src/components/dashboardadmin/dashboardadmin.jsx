@@ -26,6 +26,10 @@ function DashboardAdmin() {
     lapors?.data?.sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal)) ||
     [];
 
+  const unverified = (
+    lapors?.totalItems - lapors?.totalLaporVerified
+  ).toString();
+
   return (
     <div className="overflow-x-auto bg-[#faffff] min-h-screen">
       <NavbarAdmin />
@@ -35,15 +39,15 @@ function DashboardAdmin() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 py-4">
             <div className="bg-blue-500 text-white p-4 rounded-md">
               <h2 className="text-xl font-bold mb-2">Total Laporan</h2>
-              <p>{lapors?.totalItems}</p>
+              <p>{lapors?.totalItems?.toString()}</p>
             </div>
             <div className="bg-green-500 text-white p-4 rounded-md">
               <h2 className="text-xl font-bold mb-2">Verified</h2>
-              <p>{lapors?.totalLaporVerified}</p>
+              <p>{lapors?.totalLaporVerified?.toString()}</p>
             </div>
             <div className="bg-red-500 text-white p-4 rounded-md">
               <h2 className="text-xl font-bold mb-2">Unverified</h2>
-              <p>{lapors?.totalItems - lapors?.totalLaporVerified}</p>
+              <p>{unverified}</p>
             </div>
           </div>
         </div>
@@ -119,7 +123,7 @@ function DashboardAdmin() {
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-4 rounded-md w-1/2">
             <h2 className="text-xl font-bold mb-4">Detail Keterangan</h2>
-            <p>{selectedLapor.keterangan}</p>
+            <p>{selectedLapor?.keterangan}</p>
             <button
               className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
               onClick={closeModal}
