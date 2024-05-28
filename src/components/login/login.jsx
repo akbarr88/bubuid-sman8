@@ -1,7 +1,7 @@
-import axios from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logoLogin from "../../assets/login.jpeg";
+import UseLoginUser from "../../hook/user/useLogin";
 
 function Login() {
   const navigate = useNavigate();
@@ -14,6 +14,7 @@ function Login() {
 
   const [errorLogin, setErrorLogin] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const { login } = UseLoginUser();
 
   const handleChange = (e) => {
     setUser({
@@ -24,28 +25,17 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:3000/auth/login",
-        user,
-        {
-          withCredentials: true,
-        }
-      );
-      const data = response.data;
-      console.log(response.data);
-
-      if (!data || !data.token || !data.id_user) {
-        // Data tidak lengkap, tampilkan alert
-        alert("Login gagal. Cek kembali username dan password Anda.");
-        return;
-      }
-
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("id_user", data.id_user);
-      if (data.role === "admin") {
-        return navigate("/dashboardadmin");
-      }
-      navigate("/");
+      login(user, {
+        onSuccess: (data) => {
+          console.log(data);
+          localStorage.setItem("token", data.token);
+          localStorage.setItem("id_user", data.id_user);
+          if (data.role === "admin") {
+            return navigate("/dashboardadmin");
+          }
+          navigate("/");
+        },
+      });
     } catch (error) {
       console.error("Error during login:", error);
 

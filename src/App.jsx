@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import AdminRoute from "./components/routing/adminRoute";
 import PrivateRoute from "./components/routing/privateRoute";
+import QueryProvider from "./queryProvider";
 
 const LandingPage = lazy(() => import("./components/landingpage/landingpage"));
 const Login = lazy(() => import("./components/login/login"));
@@ -42,27 +43,33 @@ function App() {
           </div>
         }
       >
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="login" element={<Login />} />
-          <Route path="register" element={<Regis />} />
-          <Route element={<PrivateRoute />}>
-            <Route path="aboutbullying" element={<AboutBullying />} />
-            <Route path="konseling" element={<Konseling />} />
-            <Route path="konseling/:id" element={<DetailPsikolog />} />
-            <Route path="artikel" element={<Artikel />} />
-            <Route path="artikel/:id" element={<BacaArtikel />} />
-            <Route path="lapor" element={<Lapor />} />
-            <Route element={<AdminRoute />}>
-              <Route path="dashboardadmin" index element={<DashboardAdmin />} />
-              <Route path="uploadartikel" element={<UploadArtikel />} />
-              <Route path="datalaporan" element={<DataLaporan />} />
-              <Route path="datapengguna" element={<DataPengguna />} />
-              <Route path="detaillaporan" element={<ReportDetails />} />
-              <Route path="sendemail/:id" element={<ContactUs />} />
+        <QueryProvider>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="login" element={<Login />} />
+            <Route path="register" element={<Regis />} />
+            <Route element={<PrivateRoute />}>
+              <Route path="aboutbullying" element={<AboutBullying />} />
+              <Route path="konseling" element={<Konseling />} />
+              <Route path="konseling/:id" element={<DetailPsikolog />} />
+              <Route path="artikel" element={<Artikel />} />
+              <Route path="artikel/:id" element={<BacaArtikel />} />
+              <Route path="lapor" element={<Lapor />} />
+              <Route element={<AdminRoute />}>
+                <Route
+                  path="dashboardadmin"
+                  index
+                  element={<DashboardAdmin />}
+                />
+                <Route path="uploadartikel" element={<UploadArtikel />} />
+                <Route path="datalaporan" element={<DataLaporan />} />
+                <Route path="datapengguna" element={<DataPengguna />} />
+                <Route path="detaillaporan" element={<ReportDetails />} />
+                <Route path="sendemail/:id" element={<ContactUs />} />
+              </Route>
             </Route>
-          </Route>
-        </Routes>
+          </Routes>
+        </QueryProvider>
       </Suspense>
     </>
   );

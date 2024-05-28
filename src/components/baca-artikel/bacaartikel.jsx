@@ -1,23 +1,14 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import React from "react";
 import logoFb from "../../assets/Logofb.png";
 import logoGoogle from "../../assets/Logogugel.png";
 import logoIg from "../../assets/Logoig.png";
-import { getArtikelById } from "../../redux/actions/artikel.action";
+import UseGetArticleId from "../../hook/artikel/useGetArtikelbyid";
 import Footer from "../footer/footer";
 import Navbar from "../navbar/navbar";
 
 function Bacaartikel() {
-  const dispatch = useDispatch();
-  const { isLoading, artikelbyId } = useSelector((state) => state.artikel);
-  const token = localStorage.getItem("token");
-
-  const { id } = useParams();
-
-  useEffect(() => {
-    dispatch(getArtikelById(token, id));
-  }, []);
+  const { artikelDetail } = UseGetArticleId();
+  const artikelbyId = artikelDetail?.data;
 
   return (
     <>
@@ -37,25 +28,25 @@ function Bacaartikel() {
       <div className="md:p-10">
         <div className="p-10 bg-slate-100 font-poppins">
           <h1 className="font-bold text-center text-2xl">
-            {artikelbyId.judul}
+            {artikelbyId?.judul}
           </h1>
           <div className="grid grid-cols-1 justify-center items-center">
             <img
-              src={artikelbyId.gambar}
+              src={artikelbyId?.gambar}
               width={400}
               className="mx-auto mt-8 mb-10 rounded-md"
               alt=""
             />
             <div
               className="whitespace-pre-wrap"
-              dangerouslySetInnerHTML={{ __html: artikelbyId.isi }}
+              dangerouslySetInnerHTML={{ __html: artikelbyId?.isi }}
             ></div>
           </div>
           <div className="justify-between p-2 mt-10">
             <div className="flex gap-4 items-center">
-              <img src={artikelbyId.profil_penulis} width={30} alt="" />
+              <img src={artikelbyId?.profil_penulis} width={30} alt="" />
               <div>
-                <p>{artikelbyId.penulis}</p>
+                <p>{artikelbyId?.penulis}</p>
               </div>
             </div>
             <div className="flex gap-4 mt-4 ml-12">

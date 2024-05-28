@@ -1,20 +1,12 @@
-import React, { useEffect } from "react";
-import Navbar from "../navbar/navbar";
-import Footer from "../footer/footer";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
 import { Link } from "react-router-dom";
-import { getArtikels } from "../../redux/actions/artikel.action";
+import UseGetArtikel from "../../hook/artikel/useGetArtikel";
+import Footer from "../footer/footer";
+import Navbar from "../navbar/navbar";
 
 function Artikel() {
-  const dispatch = useDispatch();
-  const { isLoading, artikels } = useSelector((state) => state.artikel);
-  const token = localStorage.getItem("token");
-
-
-  useEffect(() => {
-    dispatch(getArtikels(token));
-    console.log(artikels);
-  }, []);
+  const { isLoading, artikels = {} } = UseGetArtikel();
+  const artikelData = artikels?.data;
 
   return (
     <>
@@ -36,24 +28,21 @@ function Artikel() {
           {isLoading ? (
             <span className="loading loading-dots loading-sm"></span>
           ) : (
-            artikels.map((artikel) => (
-              <div className="flex flex-col-reverse md:flex-row mb-16 items-center gap-10" key={artikel.id}>
+            artikelData.map((artikel) => (
+              <div
+                className="flex flex-col-reverse md:flex-row mb-16 items-center gap-10"
+                key={artikel.id}
+              >
                 <div className="">
                   <h1 className="text-2xl font-bold">{artikel.judul}</h1>
-                  <p className="py-6">
-                    {artikel.highlight_isi}
-                  </p>
+                  <p className="py-6">{artikel.highlight_isi}</p>
                   <Link to={`/artikel/${artikel.id}`}>
                     <button className="btn btn-outline btn-xs sm:btn-sm md:btn-md ">
                       Baca Selengkapnya
                     </button>
                   </Link>
                 </div>
-                  <img
-                    src={artikel.gambar}
-                    width={300}
-                    className="rounded-3xl"
-                  />
+                <img src={artikel.gambar} width={300} className="rounded-3xl" />
               </div>
             ))
           )}

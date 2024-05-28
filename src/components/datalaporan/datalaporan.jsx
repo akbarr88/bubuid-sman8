@@ -1,16 +1,15 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { getLapors } from "../../redux/actions/datalaporan.action";
+import React, { useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import UseDeleteLapor from "../../hook/lapor/useDeleteLapor";
+import UseGetAllLapor from "../../hook/lapor/useGetAllLapor";
 import isEmpty from "../../utils/empetyObject";
 import NavbarAdmin from "../navbar/navbaradmin";
 
 function DataLaporan() {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isLoading, lapors } = useSelector((state) => state.lapor);
-  const token = localStorage.getItem("token");
+  const { lapors = [] } = UseGetAllLapor();
+  const { deleteLaporan } = UseDeleteLapor();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(lapors.currentPage || 1);
 
   // State untuk modal
@@ -19,10 +18,6 @@ function DataLaporan() {
 
   // State untuk filter tanggal
   const [sortOrder, setSortOrder] = useState("desc"); // default: newest first
-
-  useEffect(() => {
-    dispatch(getLapors(token, currentPage));
-  }, [dispatch, token, currentPage]);
 
   if (isEmpty(lapors)) return <div>Loading...</div>;
 
@@ -41,17 +36,25 @@ function DataLaporan() {
   };
 
   const handleDelete = async (laporId) => {
-    const res = await axios.delete(`http://localhost:3000/lapor/${laporId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    return res.data;
+    deleteLaporan(laporId);
   };
 
+  function prevPage() {
+    const current = currentPage - 1;
+    setCurrentPage(current);
+    searchParams.set("page", current);
+    setSearchParams(searchParams);
+  }
+
+  function nextPage() {
+    const current = currentPage + 1;
+    setCurrentPage(current);
+    searchParams.set("page", current);
+    setSearchParams(searchParams);
+  }
+
   // Sort data by date based on sortOrder
-  const sortedLapors = [...lapors.data].sort((a, b) => {
+  const sortedLapors = lapors.data?.sort((a, b) => {
     const dateA = new Date(a.tanggal);
     const dateB = new Date(b.tanggal);
     return sortOrder === "desc" ? dateB - dateA : dateA - dateB;
@@ -78,9 +81,11 @@ function DataLaporan() {
             </tr>
           </thead>
           <tbody>
-            {sortedLapors.map((lapor, index) => (
+            {sortedLapors?.map((lapor, index) => (
               <tr key={index}>
-                <td className="px-4 py-2">{index + 1}</td>
+                <td className="px-4 py-2">
+                  {index + 1 + (currentPage - 1) * 10}
+                </td>
                 <td className="px-4 py-2">
                   <div className="flex items-center gap-3">
                     <div className="font-bold">{lapor?.User?.nama}</div>
@@ -129,7 +134,7 @@ function DataLaporan() {
       <div className="pagination flex items-center justify-center mt-4 mb-8">
         <button
           className="px-3 py-1 bg-gray-200 text-gray-700 rounded-md mr-2"
-          onClick={() => setCurrentPage(currentPage - 1)}
+          onClick={() => prevPage()}
           disabled={currentPage === 1}
         >
           Prev
@@ -139,8 +144,8 @@ function DataLaporan() {
         </span>
         <button
           className="px-3 py-1 bg-gray-200 text-gray-700 rounded-md mr-2"
-          onClick={() => setCurrentPage(currentPage + 1)}
-          disabled={lapors.currentPage === lapors.totalPages}
+          onClick={() => nextPage()}
+          disabled={lapors?.currentPage === lapors?.totalPages}
         >
           Next
         </button>

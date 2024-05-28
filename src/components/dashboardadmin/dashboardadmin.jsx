@@ -1,22 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getLapors } from "../../redux/actions/datalaporan.action";
+import UseGetAllLapor from "../../hook/lapor/useGetAllLapor";
 import NavbarAdmin from "../navbar/navbaradmin";
 
 function DashboardAdmin() {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isLoading, lapors } = useSelector((state) => state.lapor);
-  const token = localStorage.getItem("token");
+  const { lapors = [] } = UseGetAllLapor();
 
   // State untuk modal
   const [showModal, setShowModal] = useState(false);
   const [selectedLapor, setSelectedLapor] = useState(null);
-
-  useEffect(() => {
-    dispatch(getLapors(token));
-  }, [dispatch, token]);
 
   const openModal = (lapor) => {
     setSelectedLapor(lapor);
@@ -29,7 +22,9 @@ function DashboardAdmin() {
   };
 
   // Urutkan laporan berdasarkan tanggal dari yang terbaru ke yang terlama
-  const sortedLapors = lapors?.data?.sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal)) || [];
+  const sortedLapors =
+    lapors?.data?.sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal)) ||
+    [];
 
   return (
     <div className="overflow-x-auto bg-[#faffff] min-h-screen">
@@ -40,15 +35,15 @@ function DashboardAdmin() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 py-4">
             <div className="bg-blue-500 text-white p-4 rounded-md">
               <h2 className="text-xl font-bold mb-2">Total Laporan</h2>
-              <p>{lapors.totalItems}</p>
+              <p>{lapors?.totalItems}</p>
             </div>
             <div className="bg-green-500 text-white p-4 rounded-md">
               <h2 className="text-xl font-bold mb-2">Verified</h2>
-              <p>{lapors.totalLaporVerified}</p>
+              <p>{lapors?.totalLaporVerified}</p>
             </div>
             <div className="bg-red-500 text-white p-4 rounded-md">
               <h2 className="text-xl font-bold mb-2">Unverified</h2>
-              <p>{lapors.totalItems - lapors.totalLaporVerified}</p>
+              <p>{lapors?.totalItems - lapors?.totalLaporVerified}</p>
             </div>
           </div>
         </div>
@@ -69,7 +64,7 @@ function DashboardAdmin() {
                 </tr>
               </thead>
               <tbody>
-                {sortedLapors.slice(0, 3).map((lapor, index) => (
+                {sortedLapors?.slice(0, 3).map((lapor, index) => (
                   <tr
                     key={lapor.id}
                     className={index === 0 ? "" : "border-t-2 border-gray-200"}

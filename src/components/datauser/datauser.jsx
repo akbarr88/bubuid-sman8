@@ -1,62 +1,51 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import UseDeleteUser from "../../hook/user/useDeleteUser";
+import UseGetAllUser from "../../hook/user/useGetAllUser";
 import NavbarAdmin from "../navbar/navbaradmin";
 
 function DataLaporan() {
-  const [userDetail, setUserDetail] = useState(null);
+  // const [userDetail, setUserDetail] = useState(null);
+  const { userDetail = [] } = UseGetAllUser();
+  const { deleteUser } = UseDeleteUser();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortOrder, setSortOrder] = useState('asc'); // State untuk pengurutan nama
+  const [sortOrder, setSortOrder] = useState("asc"); // State untuk pengurutan nama
   const token = localStorage.getItem("token");
 
-  useEffect(() => {
-    getAllUser();
-  }, [currentPage]);
-
-  const getAllUser = async () => {
-    try {
-      const res = await axios.get(
-        `http://localhost:3000/users?page=${currentPage}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setUserDetail(res.data);
-    } catch (error) {
-      console.error("Error fetching users:", error);
-    }
-  };
-
   const handleNameSort = () => {
-    setSortOrder((prevOrder) => (prevOrder === 'asc' ? 'desc' : 'asc'));
+    setSortOrder((prevOrder) => (prevOrder === "asc" ? "desc" : "asc"));
   };
 
   const handleDelete = async (userId) => {
-    try {
-      const response = await axios.delete(`http://localhost:3000/users/${userId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log("Delete response:", response);
-      getAllUser(); // Refresh the user list after deletion
-    } catch (error) {
-      console.error("Error deleting user:", error);
-    }
+    deleteUser(userId);
   };
 
   if (!userDetail) return <div>Loading...</div>;
 
-  const sortedUsers = [...userDetail.data].sort((a, b) => {
+  const sortedUsers = userDetail?.data?.sort((a, b) => {
     const nameA = a.nama.toUpperCase();
     const nameB = b.nama.toUpperCase();
-    if (sortOrder === 'asc') {
+    if (sortOrder === "asc") {
       return nameA > nameB ? 1 : -1;
     } else {
       return nameA < nameB ? 1 : -1;
     }
   });
+
+  function prevPage() {
+    const current = currentPage - 1;
+    setCurrentPage(current);
+    searchParams.set("page", current);
+    setSearchParams(searchParams);
+  }
+
+  function nextPage() {
+    const current = currentPage + 1;
+    setCurrentPage(current);
+    searchParams.set("page", current);
+    setSearchParams(searchParams);
+  }
 
   return (
     <div className="overflow-x-auto bg-[#faffff] h-screen">
@@ -68,7 +57,7 @@ function DataLaporan() {
             <tr>
               <th className="w-20">No</th>
               <th className="w-60 cursor-pointer" onClick={handleNameSort}>
-                Name {sortOrder === 'asc' ? '▲' : '▼'}
+                Name {sortOrder === "asc" ? "▲" : "▼"}
               </th>
               <th className="w-80">Email</th>
               <th className="w-80">Umur</th>
@@ -78,7 +67,7 @@ function DataLaporan() {
             </tr>
           </thead>
           <tbody>
-            {sortedUsers.map((user, index) => (
+            {sortedUsers?.map((user, index) => (
               <tr
                 key={user.id} // Changed key to user.id for better identification
                 className={index === 0 ? "" : "border-t-2 border-gray-200"}
@@ -111,7 +100,7 @@ function DataLaporan() {
       <div className="pagination flex items-center justify-center mt-4 mb-8">
         <button
           className="px-3 py-1 bg-gray-200 text-gray-700 rounded-md mr-2"
-          onClick={() => setCurrentPage(currentPage - 1)}
+          onClick={() => prevPage()}
           disabled={currentPage === 1}
         >
           Prev
@@ -121,7 +110,7 @@ function DataLaporan() {
         </span>
         <button
           className="px-3 py-1 bg-gray-200 text-gray-700 rounded-md mr-2"
-          onClick={() => setCurrentPage(currentPage + 1)}
+          onClick={() => nextPage()}
           disabled={currentPage === userDetail.totalPages}
         >
           Next

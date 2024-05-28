@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { submitLaporan } from "../../redux/actions/laporan.action";
+import UseCreateLapor from "../../hook/lapor/useCreateLapor";
 import Footer from "../footer/footer";
 import Navbar from "../navbar/navbar";
 
 function Lapor() {
   const dispatch = useDispatch();
+  const { createLapor } = UseCreateLapor();
   const token = localStorage.getItem("token");
 
   // State untuk menyimpan nilai input
@@ -40,15 +41,8 @@ function Lapor() {
       alert("Please fill all fields before submitting.");
       return;
     }
-
-    dispatch(submitLaporan(token, formData))
-      .then(() => {
-        alert("Data berhasil di submit!");
-      })
-      .catch((error) => {
-        alert("Terjadi kesalahan saat mengirim data.");
-        console.error("Error:", error);
-      });
+    createLapor(formData);
+    setFormData({ tanggal: "", keterangan: "" });
   };
 
   return (

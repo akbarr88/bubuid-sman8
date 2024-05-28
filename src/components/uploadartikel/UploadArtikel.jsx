@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useReducer } from "react";
+import UseCreateArticle from "../../hook/artikel/useCreateArtikel";
 import { removeFileExtensionFromUrl } from "../../redux/utils/parseImgName";
 import NavbarAdmin from "../navbar/navbaradmin";
 
@@ -36,15 +37,14 @@ const reducer = (state, action) => {
 
 export default function UploadArtikel() {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const { createArtikel } = UseCreateArticle();
   const { image, judul, isi, loading, penulis, headline, errorMessage } = state;
   const token = localStorage.getItem("token");
-
-  const controller = new AbortController();
-  const signal = controller.signal;
 
   async function handleUpload(e) {
     dispatch({ type: "SET_LOADING", payload: true });
     e.preventDefault();
+
     if (!image) {
       const data = {
         judul,
@@ -52,19 +52,12 @@ export default function UploadArtikel() {
         penulis,
         headline_isi: headline,
       };
-
-      const response = await axios.post("http://localhost:3000/artikel", data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        signal,
-      });
-
+      createArtikel(data);
       alert("Artikel Created");
       dispatch({ type: "SET_LOADING", payload: false });
-      return response;
+      return null;
     }
+
     const formData = new FormData();
     formData.append("file", image);
     const res = await axios.post(
@@ -74,15 +67,16 @@ export default function UploadArtikel() {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-        signal,
       }
     );
     const imageUrl = res.data.imageUrl;
     const imageName = removeFileExtensionFromUrl(imageUrl);
+
     if (!res.data.imageUrl) {
       dispatch({ type: "SET_LOADING", payload: false });
       return;
     }
+
     try {
       const data = {
         judul,
@@ -91,17 +85,9 @@ export default function UploadArtikel() {
         headline_isi: headline,
         gambar: imageUrl,
       };
-
-      const response = await axios.post("http://localhost:3000/artikel", data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        signal,
-      });
-
+      createArtikel(data);
       dispatch({ type: "SET_LOADING", payload: false });
-      return response;
+      return null;
     } catch (error) {
       if (error.response && error.response.status === 403) {
         dispatch({
