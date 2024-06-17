@@ -64,9 +64,9 @@ export const ContactUs = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <NavbarAdmin />
-      <div className="flex-grow flex flex-col items-center justify-center overflow-x-auto mt-16">
-        <h1 className="text-3xl text-gray-700 mb-4">Form Reply</h1>
-        <div className="w-full max-w-4xl bg-white p-8 rounded-lg shadow-md">
+      <div className="flex-grow flex flex-col items-center justify-center overflow-x-auto ">
+        <h1 className="text-3xl text-gray-700 mb-16">Form Reply</h1>
+        <div className="w-full max-w-4xl bg-white p-4 rounded-lg shadow-md">
           <form ref={form} onSubmit={sendEmail} className="space-y-4">
             <div>
               <label

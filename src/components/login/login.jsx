@@ -22,6 +22,7 @@ function Login() {
       [e.target.name]: e.target.value,
     });
   };
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -39,15 +40,16 @@ function Login() {
     } catch (error) {
       console.error("Error during login:", error);
 
-      // Tangani pesan kesalahan dari server
+      // Handle error message from the server
       if (error.response && error.response.status === 400) {
         setErrorLogin(true);
-        setErrorMessage(error.response.data);
+        setErrorMessage(error.response.data.message || "Email atau password salah.");
       } else {
         alert("Terjadi kesalahan selama proses login. Coba lagi nanti.");
       }
     }
   };
+
   return (
     <div className="hero min-h-screen bg-[#18978F]">
       <div className="hero-content">
@@ -83,11 +85,11 @@ function Login() {
               />
               <label className="label">
                 <Link to="/register" className="label-text-alt link link-hover">
-                  Create Acoount
+                  Create Account
                 </Link>
               </label>
             </div>
-            {errorLogin ? (
+            {errorLogin && (
               <div role="alert" className="alert alert-error p-1">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -104,8 +106,6 @@ function Login() {
                 </svg>
                 <span className="text-xs">{errorMessage}</span>
               </div>
-            ) : (
-              <span></span>
             )}
             <div className="form-control mt-6">
               <button

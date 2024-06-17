@@ -25,7 +25,7 @@ function LandingPage() {
             </div>
             <p className="p-6 font-poppins antialiased tracking-wider">
               Bubu.id adalah website yang mendukung gerakan anti-bullying,
-              yang menyediakan konten edukasi dan pelaporan form
+              yang menyediakan konten edukasi dan pelaporan
               bullying di SMAN 8 BATAM <br></br> #BullyingBusters
             </p>
           </div>
@@ -87,27 +87,6 @@ function LandingPage() {
               Fitur 
             </h1>
             <div className="flex flex-col md:flex-row font-poppins text-white justify-center gap-14">
-              {/* <div className="basis-1/4">
-                <div className="card shadow-xl bg-[#18978F]">
-                  <div className="card-body">
-                    <h2 className="text-sm text-left">Konseling</h2>
-                    <h3 className="font-semibold text-left">
-                      Tersedia Konseling Online & Offline
-                    </h3>
-                    <p className="text-left font-poppins text-sm mt-4">
-                      Kamu bisa memilih waktu konseling, yang disesuaikan dengan
-                      kenyamananmu bercerita
-                    </p>
-                    <div className="card-actions justify-center">
-                      <Link to="/konseling">
-                        <button className="bg-white px-4 py-1 rounded-md text-black">
-                          Learn More
-                        </button>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div> */}
               <div className="basis-1/4">
                 <div className="card shadow-xl bg-[#18978F]">
                   <div className="card-body ">

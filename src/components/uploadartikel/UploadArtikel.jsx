@@ -1,5 +1,7 @@
 import axios from "axios";
 import React, { useReducer } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import UseCreateArticle from "../../hook/artikel/useCreateArtikel";
 import { removeFileExtensionFromUrl } from "../../redux/utils/parseImgName";
 import NavbarAdmin from "../navbar/navbaradmin";
@@ -53,7 +55,7 @@ export default function UploadArtikel() {
         headline_isi: headline,
       };
       createArtikel(data);
-      alert("Artikel Created");
+      toast.success("Artikel berhasil diupload!");
       dispatch({ type: "SET_LOADING", payload: false });
       return null;
     }
@@ -74,6 +76,7 @@ export default function UploadArtikel() {
 
     if (!res.data.imageUrl) {
       dispatch({ type: "SET_LOADING", payload: false });
+      toast.error("Gagal mengunggah gambar!");
       return;
     }
 
@@ -86,6 +89,7 @@ export default function UploadArtikel() {
         gambar: imageUrl,
       };
       createArtikel(data);
+      toast.success("Artikel berhasil diupload!");
       dispatch({ type: "SET_LOADING", payload: false });
       return null;
     } catch (error) {
@@ -94,6 +98,7 @@ export default function UploadArtikel() {
           type: "SET_ERROR_MESSAGE",
           payload: error.response.data.message,
         });
+        toast.error(error.response.data.message);
       }
       await axios.delete(`http://localhost:3000/image/delete/${imageName}`);
     } finally {
@@ -104,6 +109,7 @@ export default function UploadArtikel() {
   return (
     <div className="min-h-screen flex flex-col">
       <NavbarAdmin />
+      <ToastContainer />
       <div className="flex-grow flex flex-col items-center justify-center overflow-x-auto mt-2">
         <p className="text-red-600 font-semibold text-sm">{errorMessage}</p>
         <div className="w-full max-w-4xl bg-white p-8 rounded-lg shadow-md">

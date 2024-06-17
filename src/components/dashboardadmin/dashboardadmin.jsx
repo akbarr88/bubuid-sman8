@@ -30,6 +30,16 @@ function DashboardAdmin() {
     lapors?.totalItems - lapors?.totalLaporVerified
   ).toString();
 
+  const obfuscateName = (name) => {
+    const truncatedName = name.length > 14 ? name.substring(0, 14) : name;
+    const nameArray = truncatedName.split('');
+    const randomIndexes = new Set();
+    while (randomIndexes.size < 2) {
+      randomIndexes.add(Math.floor(Math.random() * truncatedName.length));
+    }
+    return nameArray.map((char, index) => randomIndexes.has(index) ? char : '*').join('');
+  };
+
   return (
     <div className="overflow-x-auto bg-[#faffff] min-h-screen">
       <NavbarAdmin />
@@ -77,7 +87,7 @@ function DashboardAdmin() {
                     <td>
                       <div className="flex items-center gap-3">
                         <div>
-                          <div className="font-bold">{lapor?.User?.nama}</div>
+                          <div className="font-bold">{obfuscateName(lapor?.User?.nama)}</div>
                         </div>
                       </div>
                     </td>

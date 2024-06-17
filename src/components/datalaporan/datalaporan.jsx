@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import UseDeleteLapor from "../../hook/lapor/useDeleteLapor";
 import UseGetAllLapor from "../../hook/lapor/useGetAllLapor";
 import isEmpty from "../../utils/empetyObject";
@@ -35,8 +37,35 @@ function DataLaporan() {
     setSortOrder((prevOrder) => (prevOrder === "desc" ? "asc" : "desc"));
   };
 
+  const confirmDelete = (laporId) => {
+    toast(
+      ({ closeToast }) => (
+        <div>
+          <p>Apakah yakin ingin menghapus data laporan ini?</p>
+          <button
+            className="bg-red-500 text-white px-2 py-1 rounded mr-2"
+            onClick={() => {
+              deleteLaporan(laporId);
+              toast.success("Data laporan berhasil dihapus!");
+              closeToast();
+            }}
+          >
+            Yes
+          </button>
+          <button
+            className="bg-gray-500 text-white px-2 py-1 rounded"
+            onClick={closeToast}
+          >
+            No
+          </button>
+        </div>
+      ),
+      { autoClose: false }
+    );
+  };
+
   const handleDelete = async (laporId) => {
-    deleteLaporan(laporId);
+    confirmDelete(laporId);
   };
 
   function prevPage() {
@@ -53,6 +82,17 @@ function DataLaporan() {
     setSearchParams(searchParams);
   }
 
+  // Function to obfuscate the name with random visible letters and asterisks
+  const obfuscateName = (name) => {
+    const truncatedName = name.length > 14 ? name.substring(0, 14) : name;
+    const nameArray = truncatedName.split('');
+    const randomIndexes = new Set();
+    while (randomIndexes.size < 2) {
+      randomIndexes.add(Math.floor(Math.random() * truncatedName.length));
+    }
+    return nameArray.map((char, index) => randomIndexes.has(index) ? char : '*').join('');
+  };
+
   // Sort data by date based on sortOrder
   const sortedLapors = lapors.data?.sort((a, b) => {
     const dateA = new Date(a.tanggal);
@@ -63,11 +103,12 @@ function DataLaporan() {
   return (
     <div className="overflow-x-auto bg-[#faffff] h-screen">
       <NavbarAdmin />
+      <ToastContainer />
       <div className="mx-auto max-w-4xl">
         <table className="table mt-8 w-full">
           <thead>
             <tr>
-              <th className="w-20 text-left px-4 py-2">No</th>
+              <th className="w-10 text-left px-4 py-2">No</th>
               <th className="w-60 text-left px-4 py-2">Nama</th>
               <th
                 className="w-32 text-left px-4 py-2 cursor-pointer"
@@ -88,7 +129,7 @@ function DataLaporan() {
                 </td>
                 <td className="px-4 py-2">
                   <div className="flex items-center gap-3">
-                    <div className="font-bold">{lapor?.User?.nama}</div>
+                    <div className="font-bold">{obfuscateName(lapor?.User?.nama)}</div>
                   </div>
                 </td>
                 <td className="px-1 py-2">
@@ -139,9 +180,11 @@ function DataLaporan() {
         >
           Prev
         </button>
-        <span className="px-3 py-1 bg-blue-400 text-gray-700 rounded-md mr-2">
+        <button
+          className="px-3 py-1 bg-blue-400 text-gray-700 rounded-md mr-2"
+        >
           {currentPage}
-        </span>
+        </button>
         <button
           className="px-3 py-1 bg-gray-200 text-gray-700 rounded-md mr-2"
           onClick={() => nextPage()}

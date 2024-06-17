@@ -58,7 +58,7 @@ function NavbarAdmin() {
               : "hidden lg:flex"
           }`}
         >
-          <ul className="lg:flex gap-16 p-2 trackingwider ml-40 ">
+          <ul className="lg:flex gap-8 p-2 trackingwider ml-40 ">
             <li
               className={`hover:bg-white px-2 py-1 hover:text-black hover:rounded-xl text-xs ${
                 isActive("/dashboardadmin") && "bg-white text-black rounded-xl"
@@ -86,6 +86,13 @@ function NavbarAdmin() {
               }`}
             >
               <Link to="/uploadartikel">UPLOAD ARTIKEL</Link>
+            </li>
+            <li
+              className={`hover:bg-white px-2 py-1 hover:text-black hover:rounded-xl text-xs ${
+                isActive("/") && "bg-white text-black rounded-xl"
+              }`}
+            >
+              <Link to="/">Landing Page</Link>
             </li>
             <svg
               xmlns="http://www.w3.org/2000/svg"

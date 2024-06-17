@@ -10,6 +10,12 @@ function Bacaartikel() {
   const { artikelDetail } = UseGetArticleId();
   const artikelbyId = artikelDetail?.data;
 
+  // Format the createdAt date to 'YYYY-MM-DD'
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    return new Date(dateString).toLocaleDateString('sv-SE', options);
+  };
+
   return (
     <>
       <Navbar />
@@ -47,6 +53,7 @@ function Bacaartikel() {
               <img src={artikelbyId?.profil_penulis} width={30} alt="" />
               <div>
                 <p>{artikelbyId?.penulis}</p>
+                <p>{artikelbyId?.createdAt ? formatDate(artikelbyId.createdAt) : ''}</p>
               </div>
             </div>
             <div className="flex gap-4 mt-4 ml-12">

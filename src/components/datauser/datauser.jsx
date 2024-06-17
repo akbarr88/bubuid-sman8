@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import UseDeleteUser from "../../hook/user/useDeleteUser";
 import UseGetAllUser from "../../hook/user/useGetAllUser";
 import NavbarAdmin from "../navbar/navbaradmin";
 
 function DataLaporan() {
-  // const [userDetail, setUserDetail] = useState(null);
   const { userDetail = [] } = UseGetAllUser();
   const { deleteUser } = UseDeleteUser();
   const [searchParams, setSearchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortOrder, setSortOrder] = useState("asc"); // State untuk pengurutan nama
+  const [sortOrder, setSortOrder] = useState("asc");
   const token = localStorage.getItem("token");
 
   const handleNameSort = () => {
@@ -18,7 +19,10 @@ function DataLaporan() {
   };
 
   const handleDelete = async (userId) => {
-    deleteUser(userId);
+    if (window.confirm("Apakah yakin ingin menghapus data user ini?")) {
+      deleteUser(userId);
+      toast.success("Data user berhasil dihapus!");
+    }
   };
 
   if (!userDetail) return <div>Loading...</div>;
@@ -50,31 +54,32 @@ function DataLaporan() {
   return (
     <div className="overflow-x-auto bg-[#faffff] h-screen">
       <NavbarAdmin />
+      <ToastContainer />
       <div className="mx-auto max-w-4xl">
         <h3 className="mt-8 text-2xl">Total User {userDetail?.totalItems}</h3>
         <table className="table">
           <thead>
             <tr>
-              <th className="w-20">No</th>
+              <th className="w-4">No</th>
               <th className="w-60 cursor-pointer" onClick={handleNameSort}>
                 Name {sortOrder === "asc" ? "▲" : "▼"}
               </th>
-              <th className="w-80">Email</th>
-              <th className="w-80">Umur</th>
+              <th className="w-20">Email</th>
+              <th className="w-20">Umur</th>
               <th className="w-20">Jenis kelamin</th>
-              <th className="w-20">Sekolah</th>
-              <th className="w-20">Actions</th>
+              <th className="w-32">Kelas</th>
+              <th className="w-40">Actions</th>
             </tr>
           </thead>
           <tbody>
             {sortedUsers?.map((user, index) => (
               <tr
-                key={user.id} // Changed key to user.id for better identification
+                key={user.id}
                 className={index === 0 ? "" : "border-t-2 border-gray-200"}
               >
                 <td>{index + 1 + (currentPage - 1) * 10}</td>
                 <td>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center">
                     <div>
                       <div className="font-bold">{user?.nama}</div>
                     </div>
