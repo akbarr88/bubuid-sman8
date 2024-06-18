@@ -1,8 +1,8 @@
 import api from "./axiosauth";
 
 export default class laporService {
-  static async getLapor({ currentPage }) {
-    const res = await api.get(`/lapor?page=${currentPage}`);
+  static async getLapor({ currentPage, status }) {
+    const res = await api.get(`/lapor?page=${currentPage}&filter=${status}`);
     return res.data;
   }
 

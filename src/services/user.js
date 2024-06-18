@@ -6,6 +6,13 @@ export default class userService {
     const response = await axios.post("http://localhost:3000/auth/login", user);
     return response.data;
   }
+  static async registerUser(user) {
+    const response = await axios.post(
+      "http://localhost:3000/auth/register",
+      user
+    );
+    return response.data;
+  }
 
   static async getUser({ currentPage }) {
     const response = await api.get(`/users?page=${currentPage}`);

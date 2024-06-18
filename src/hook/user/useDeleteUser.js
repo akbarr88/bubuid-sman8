@@ -10,7 +10,7 @@ export default function UseDeleteUser() {
       queryClient.invalidateQueries({ queryKey: ["users"] });
     },
     onError: (error) => {
-      console.log(error);
+      alert(error.response.data.message);
     },
   });
 

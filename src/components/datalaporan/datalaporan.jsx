@@ -4,6 +4,7 @@ import UseDeleteLapor from "../../hook/lapor/useDeleteLapor";
 import UseGetAllLapor from "../../hook/lapor/useGetAllLapor";
 import isEmpty from "../../utils/empetyObject";
 import NavbarAdmin from "../navbar/navbaradmin";
+import FilterLaporan from "./filterLaporan";
 
 function DataLaporan() {
   const navigate = useNavigate();
@@ -149,6 +150,7 @@ function DataLaporan() {
         >
           Next
         </button>
+        <FilterLaporan />
       </div>
 
       {showModal && selectedLapor && (
@@ -156,6 +158,7 @@ function DataLaporan() {
           <div className="bg-white p-4 rounded-md w-1/2">
             <h2 className="text-xl font-bold mb-4">Detail Keterangan</h2>
             <p>{selectedLapor.keterangan}</p>
+            <img src={selectedLapor.img} />
             <button
               className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
               onClick={closeModal}

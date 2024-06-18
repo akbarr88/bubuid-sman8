@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
-import logoRegis from "../../assets/regis.png"
+import logoRegis from "../../assets/regis.png";
+import UseRegister from "../../hook/user/useRegister";
 
 function Regis() {
   const [user, setUser] = useState({
@@ -16,6 +16,7 @@ function Regis() {
   const [errorRegister, setErrorRegister] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [isChecked, setIsChecked] = useState(false);
+  const { register } = UseRegister();
 
   const handleChange = (e) => {
     setUser({
@@ -28,21 +29,22 @@ function Regis() {
     e.preventDefault();
     if (!isChecked) {
       window.alert("Anda harus menyetujui syarat dan ketentuan.");
-    return;
-  }
+      return;
+    }
     try {
-      const { data } = await axios.post(
-        "http://localhost:3000/auth/register",
-        user
-      );
-      setRegisAlert(true);
-      setUser({
-        nama: "",
-        email: "",
-        password: "",
-        umur: "",
-        sekolah: "",
-        jenis_kelamin: "",
+      alert("trying register");
+      register(user, {
+        onSuccess: () => {
+          setRegisAlert(true);
+          setUser({
+            nama: "",
+            email: "",
+            password: "",
+            umur: "",
+            sekolah: "",
+            jenis_kelamin: "",
+          });
+        },
       });
     } catch (error) {
       console.error("Error during Register:", error);
@@ -50,10 +52,10 @@ function Regis() {
       setErrorMessage(error.response.data.message);
     }
   };
-  
+
   const handleCheck = () => {
-    setIsChecked(!isChecked)
-  }
+    setIsChecked(!isChecked);
+  };
 
   return (
     <div className="hero min-h-screen bg-[#18978F]">
@@ -61,7 +63,7 @@ function Regis() {
         <div className="card flex-col items-center shadow-2xl bg-base-100 md:px-20 p-4">
           <form className="card-body">
             <div className="mb-8 w-60">
-              <img src={logoRegis}alt="" />
+              <img src={logoRegis} alt="" />
             </div>
             <div className="form-control">
               <h1 className="text-center font-bold">CREATE ACCOUNT</h1>
@@ -154,8 +156,15 @@ function Regis() {
             </div>
             <div className="form-control">
               <label className="label cursor-pointer p-1">
-                <span className="label-text m-1">Saya sudah berusia diatas 15 Tahun</span>
-                <input type="checkbox" checked={isChecked} className="checkbox" onChange={handleCheck} />
+                <span className="label-text m-1">
+                  Saya sudah berusia diatas 15 Tahun
+                </span>
+                <input
+                  type="checkbox"
+                  checked={isChecked}
+                  className="checkbox"
+                  onChange={handleCheck}
+                />
               </label>
             </div>
             {regisAlert ? (

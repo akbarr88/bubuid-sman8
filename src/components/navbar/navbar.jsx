@@ -1,7 +1,8 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import axios from "axios";
 import navbarLogo from "../../assets/navbar.png";
+import Notification from "./notification";
 
 function Navbar() {
   const [isClick, setIsClick] = useState(false);
@@ -60,7 +61,9 @@ function Navbar() {
               <NavLink
                 to="/"
                 className={({ isActive }) =>
-                  isActive ? "bg-white text-black rounded-xl px-2 py-1" : "px-2 py-1"
+                  isActive
+                    ? "bg-white text-black rounded-xl px-2 py-1"
+                    : "px-2 py-1"
                 }
               >
                 HOME
@@ -71,7 +74,9 @@ function Navbar() {
                 <NavLink
                   to="/aboutbullying"
                   className={({ isActive }) =>
-                    isActive ? "bg-white text-black rounded-xl px-2 py-1" : "px-2 py-1"
+                    isActive
+                      ? "bg-white text-black rounded-xl px-2 py-1"
+                      : "px-2 py-1"
                   }
                 >
                   ABOUT BULLYING
@@ -80,7 +85,9 @@ function Navbar() {
                 <NavLink
                   to="/login"
                   className={({ isActive }) =>
-                    isActive ? "bg-white text-black rounded-xl px-2 py-1" : "px-2 py-1"
+                    isActive
+                      ? "bg-white text-black rounded-xl px-2 py-1"
+                      : "px-2 py-1"
                   }
                 >
                   ABOUT BULLYING
@@ -92,7 +99,9 @@ function Navbar() {
                 <NavLink
                   to="/lapor"
                   className={({ isActive }) =>
-                    isActive ? "bg-white text-black rounded-xl px-2 py-1" : "px-2 py-1"
+                    isActive
+                      ? "bg-white text-black rounded-xl px-2 py-1"
+                      : "px-2 py-1"
                   }
                 >
                   LAPOR
@@ -101,7 +110,9 @@ function Navbar() {
                 <NavLink
                   to="/login"
                   className={({ isActive }) =>
-                    isActive ? "bg-white text-black rounded-xl px-2 py-1" : "px-2 py-1"
+                    isActive
+                      ? "bg-white text-black rounded-xl px-2 py-1"
+                      : "px-2 py-1"
                   }
                 >
                   LAPOR
@@ -113,7 +124,9 @@ function Navbar() {
                 <NavLink
                   to="/artikel"
                   className={({ isActive }) =>
-                    isActive ? "bg-white text-black rounded-xl px-2 py-1" : "px-2 py-1"
+                    isActive
+                      ? "bg-white text-black rounded-xl px-2 py-1"
+                      : "px-2 py-1"
                   }
                 >
                   ARTIKEL
@@ -150,46 +163,48 @@ function Navbar() {
               </NavLink>
               <div
                 className={`${
-                  isLogin
-                    ? "flex gap-2 text-white hover:bg-white px-2 py-1 hover:text-black hover:rounded-xl text-xs"
-                    : "hidden"
+                  isLogin ? "flex gap-2 text-white  text-xs" : "hidden"
                 }`}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                  onClick={handleLogout}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                  onClick={handleLogout}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"
-                  />
-                </svg>
+                <div className="flex gap-2 text-white hover:bg-white px-2 py-1 items-center hover:text-black hover:rounded-xl">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-6 h-6"
+                    onClick={handleLogout}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                  </svg>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-6 h-6"
+                    onClick={handleLogout}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"
+                    />
+                  </svg>
+                </div>
+                <Notification className="hidden lg:block" />
               </div>
             </div>
           </ul>
         </div>
-        <div className="lg:hidden">
+        <div className="flex gap-2 lg:hidden">
+          <Notification />
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

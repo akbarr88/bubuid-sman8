@@ -1,4 +1,3 @@
-import emailjs from "@emailjs/browser";
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -40,6 +39,17 @@ export const ContactUs = () => {
         alert("error something wrong");
         return;
       }
+
+      const resnotif = await axios.post(
+        `http://localhost:3000/notification/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
       navigate("/datalaporan");
     } catch (error) {
       alert("error something");

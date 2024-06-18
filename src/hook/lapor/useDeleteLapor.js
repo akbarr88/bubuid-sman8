@@ -10,7 +10,7 @@ export default function UseDeleteLapor() {
       queryClient.invalidateQueries({ queryKey: ["lapor"] });
     },
     onError: (error) => {
-      console.log(error);
+      alert(error.response.data.message);
     },
   });
 

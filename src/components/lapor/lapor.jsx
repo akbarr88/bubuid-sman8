@@ -1,22 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import uploadImage from "../../hook/image/upload";
 import UseCreateLapor from "../../hook/lapor/useCreateLapor";
 import Footer from "../footer/footer";
 import Navbar from "../navbar/navbar";
 
 function Lapor() {
-  const dispatch = useDispatch();
   const { createLapor } = UseCreateLapor();
-  const token = localStorage.getItem("token");
+  const [today, setToday] = useState("");
+  const [image, setImage] = useState(null);
+  const { upload } = uploadImage();
 
-  // State untuk menyimpan nilai input
   const [formData, setFormData] = useState({
     tanggal: "",
     keterangan: "",
   });
-
-  // State untuk menyimpan tanggal hari ini
-  const [today, setToday] = useState("");
 
   useEffect(() => {
     // Mendapatkan tanggal hari ini dalam format yyyy-mm-dd
@@ -26,22 +23,30 @@ function Lapor() {
 
   // Handler untuk mengubah nilai input
   const handleChange = (e) => {
-    const value = e.target.name === "img" ? e.target.files[0] : e.target.value;
-
     setFormData({
       ...formData,
-      [e.target.name]: value,
+      [e.target.name]: e.target.value,
     });
   };
 
   // Handler untuk mengirim data
   const handleSubmit = (e) => {
+    console.log(image);
     e.preventDefault();
     if (!formData.tanggal || !formData.keterangan) {
       alert("Please fill all fields before submitting.");
       return;
     }
-    createLapor(formData);
+    if (image) {
+      upload(image, {
+        onSuccess: (data) => {
+          console.log(data);
+          createLapor({ ...formData, img: data.imageUrl });
+        },
+      });
+    } else {
+      createLapor(formData);
+    }
     setFormData({ tanggal: "", keterangan: "" });
   };
 
@@ -65,7 +70,7 @@ function Lapor() {
                 onChange={handleChange}
                 required
                 max={today} // Batas maksimal tanggal adalah hari ini
-                className="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                className="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#18978F] focus:border-[#18978F] sm:text-sm"
               />
             </div>
             <div className="py-4 mx-20 font-poppins">
@@ -77,7 +82,18 @@ function Lapor() {
                 onChange={handleChange}
                 required
                 rows="6"
-                className="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                className="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#18978F] focus:border-[#18978F] sm:text-sm"
+              />
+              <label className="block mt-4" htmlFor="fotolaporan">
+                Foto Laporan
+              </label>
+              <input
+                name="fotolaporan"
+                id="fotolaporan"
+                type="file"
+                accept="image/*"
+                onChange={(e) => setImage(e.target.files[0])}
+                className="file-input file-input-bordered file-input-[#18978F] w-full max-w-xs"
               />
             </div>
             <div className="flex justify-center">
